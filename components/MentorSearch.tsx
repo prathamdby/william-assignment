@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, ChevronDown, TrendingUp, Clock, X } from "lucide-react";
+import { NoResultsToast } from "@/components/ui/no-results-toast";
 
 interface MentorSearchProps {
   onSearch?: (term: string) => void;
@@ -33,6 +34,7 @@ export function MentorSearch({ onSearch }: MentorSearchProps) {
     Array<{ id: number; label: string }>
   >([]);
   const searchRef = useRef<HTMLDivElement>(null);
+  const [showNoResultsToast, setShowNoResultsToast] = useState(false);
 
   const trendingSearches = [
     { id: 1, label: "Microsoft" },
@@ -120,6 +122,16 @@ export function MentorSearch({ onSearch }: MentorSearchProps) {
       onSearch(term);
     }
 
+    // Check if there would be any results for this search (simulate API response)
+    const normalizedTerm = term.toLowerCase().trim();
+    const hasResults = searchSuggestions.some((suggestion) =>
+      suggestion.toLowerCase().includes(normalizedTerm)
+    );
+
+    if (!hasResults) {
+      setShowNoResultsToast(true);
+    }
+
     // In a real app, this would likely trigger a search action or route change
     console.log(`Searching for: ${term}`);
   };
@@ -152,6 +164,11 @@ export function MentorSearch({ onSearch }: MentorSearchProps) {
     }
   };
 
+  // Hide the no results toast
+  const hideNoResultsToast = () => {
+    setShowNoResultsToast(false);
+  };
+
   // What to display in the dropdown depends on:
   // 1. If typing (show suggestions)
   // 2. If focused but empty (show recent + trending)
@@ -162,6 +179,8 @@ export function MentorSearch({ onSearch }: MentorSearchProps) {
 
   return (
     <div className="flex justify-between items-center w-full">
+      <NoResultsToast show={showNoResultsToast} onHide={hideNoResultsToast} />
+
       <div className="relative" ref={searchRef}>
         <form onSubmit={handleSubmit}>
           <div className="relative">
@@ -210,31 +229,31 @@ export function MentorSearch({ onSearch }: MentorSearchProps) {
 
         {/* Recent & Trending Searches Dropdown */}
         {showRecentAndTrending && (
-          <div className="absolute top-full left-0 w-full mt-1 bg-white rounded-md border border-[#E2E8F0] shadow-lg z-10 p-3 pb-4">
+          <div className="absolute top-full left-0 w-full mt-1 bg-white rounded-lg border border-[#E2E8F0] shadow-[0px_10px_15px_0px_rgba(0,0,0,0.1),0px_4px_6px_-2px_rgba(0,0,0,0.05)] z-10 p-3">
             {/* Recent Searches Section */}
             {recentSearches.length > 0 && (
-              <div className="flex flex-col mb-4">
-                <span className="text-xs font-semibold text-[#0F172A] mb-2">
+              <div className="flex flex-col gap-2 mb-2.5">
+                <span className="text-xs font-semibold text-[#0F172A]">
                   Recent search
                 </span>
                 <div className="flex flex-col">
                   {recentSearches.map((item) => (
                     <div
                       key={item.id}
-                      className="flex items-center justify-between py-1 px-2 hover:bg-[#F1F5F9] rounded cursor-pointer group"
+                      className="flex items-center justify-between px-2 py-1 hover:bg-[#F1F5F9] rounded cursor-pointer group"
                       onClick={() => handleSearchItemClick(item.label)}
                     >
                       <div className="flex items-center gap-2">
                         <Clock size={16} className="text-[#94A3B8]" />
-                        <span className="text-xs text-[#334155]">
+                        <span className="text-xs leading-tight text-[#334155] font-medium">
                           {item.label}
                         </span>
                       </div>
                       <button
-                        className="opacity-0 group-hover:opacity-100 text-[#94A3B8] hover:text-[#64748B] p-1"
+                        className="opacity-0 group-hover:opacity-100 text-[#94A3B8] hover:text-[#64748B]"
                         onClick={(e) => clearRecentSearch(e, item.id)}
                       >
-                        ×
+                        <X size={14} />
                       </button>
                     </div>
                   ))}
@@ -243,19 +262,21 @@ export function MentorSearch({ onSearch }: MentorSearchProps) {
             )}
 
             {/* Trending Searches Section */}
-            <div className="flex flex-col">
-              <span className="text-xs font-semibold text-[#0F172A] mb-2">
+            <div className="flex flex-col gap-2">
+              <span className="text-xs font-semibold text-[#0F172A]">
                 Trending searches
               </span>
               <div className="flex flex-col">
                 {trendingSearches.map((item) => (
                   <div
                     key={item.id}
-                    className="flex items-center gap-2 py-1 px-2 hover:bg-[#F1F5F9] rounded cursor-pointer"
+                    className="flex items-center gap-2 px-2 py-1 hover:bg-[#F1F5F9] rounded cursor-pointer"
                     onClick={() => handleSearchItemClick(item.label)}
                   >
                     <TrendingUp size={16} className="text-[#94A3B8]" />
-                    <span className="text-xs text-[#334155]">{item.label}</span>
+                    <span className="text-xs leading-tight text-[#334155] font-medium">
+                      {item.label}
+                    </span>
                   </div>
                 ))}
               </div>

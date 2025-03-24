@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { MentorCard } from "@/components/MentorCard";
 import { MentorSearch } from "@/components/MentorSearch";
+import { NoResultsToast } from "@/components/ui/no-results-toast";
 
 // Sample mentor data
 const mentorsData = [
@@ -52,6 +53,7 @@ const mentorsData = [
 export default function MentorsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredMentors, setFilteredMentors] = useState(mentorsData);
+  const [showNoResultsToast, setShowNoResultsToast] = useState(false);
 
   // Filter mentors when search term changes
   useEffect(() => {
@@ -70,16 +72,44 @@ export default function MentorsPage() {
         mentor.bio.toLowerCase().includes(lowercaseSearchTerm)
     );
 
+    // Show toast if no results found
+    if (filtered.length === 0) {
+      setShowNoResultsToast(true);
+    } else {
+      setShowNoResultsToast(false);
+    }
+
     setFilteredMentors(filtered);
   }, [searchTerm]);
 
   // Handle search from MentorSearch component
   const handleSearch = (term: string) => {
     setSearchTerm(term);
+
+    // If it's a non-matching search term, show toast
+    if (
+      term &&
+      !mentorsData.some(
+        (mentor) =>
+          mentor.name.toLowerCase().includes(term.toLowerCase()) ||
+          mentor.company.toLowerCase().includes(term.toLowerCase()) ||
+          mentor.title.toLowerCase().includes(term.toLowerCase()) ||
+          mentor.bio.toLowerCase().includes(term.toLowerCase())
+      )
+    ) {
+      setShowNoResultsToast(true);
+    }
+  };
+
+  // Hide the no results toast
+  const hideNoResultsToast = () => {
+    setShowNoResultsToast(false);
   };
 
   return (
     <div className="flex flex-col min-h-screen">
+      <NoResultsToast show={showNoResultsToast} onHide={hideNoResultsToast} />
+
       <div className="bg-[#DBEAFE] py-4 px-[106px]">
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-medium font-montserrat text-[#0F172A]">
