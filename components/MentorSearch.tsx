@@ -18,6 +18,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { FilterOption } from "./ActiveFilters";
 
 // Role options for filter
 const roleOptions = [
@@ -52,6 +53,18 @@ const ratingOptions = [
 
 interface MentorSearchProps {
   onSearch?: (term: string) => void;
+  onFilterChange?: (activeFilters: {
+    roles: FilterOption[];
+    companies: FilterOption[];
+    slots: FilterOption[];
+    ratings: FilterOption[];
+  }) => void;
+  activeFilters?: {
+    roles: FilterOption[];
+    companies: FilterOption[];
+    slots: FilterOption[];
+    ratings: FilterOption[];
+  };
 }
 
 // Mock mentor data for suggestions - in a real app, this would come from API or props
@@ -71,7 +84,11 @@ const searchSuggestions = [
   "Data Scientist",
 ];
 
-export function MentorSearch({ onSearch }: MentorSearchProps) {
+export function MentorSearch({
+  onSearch,
+  onFilterChange,
+  activeFilters,
+}: MentorSearchProps) {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [recentSearches, setRecentSearches] = useState<
@@ -103,6 +120,71 @@ export function MentorSearch({ onSearch }: MentorSearchProps) {
     { id: 4, label: "Amazon" },
   ];
 
+  // Update internal filters when activeFilters changes from parent
+  useEffect(() => {
+    if (!activeFilters) return;
+
+    // Helper to check if arrays are different regardless of order
+    const areArraysDifferent = (a: string[], b: string[]) => {
+      if (a.length !== b.length) return true;
+      const setA = new Set(a);
+      return b.some((item) => !setA.has(item));
+    };
+
+    // Update role filters
+    const activeRoleValues = activeFilters.roles.map((role) => role.value);
+    if (areArraysDifferent(activeRoleValues, roleFilters)) {
+      setRoleFilters(activeRoleValues);
+    }
+
+    // Update company filters
+    const activeCompanyValues = activeFilters.companies.map(
+      (company) => company.value
+    );
+    if (areArraysDifferent(activeCompanyValues, companyFilters)) {
+      setCompanyFilters(activeCompanyValues);
+    }
+
+    // Update slot filter
+    const activeSlotValue =
+      activeFilters.slots.length > 0 ? activeFilters.slots[0].value : "";
+    if (activeSlotValue !== slotFilter) {
+      setSlotFilter(activeSlotValue);
+    }
+
+    // Update rating filter
+    const activeRatingValue =
+      activeFilters.ratings.length > 0 ? activeFilters.ratings[0].value : "";
+    if (activeRatingValue !== ratingFilter) {
+      setRatingFilter(activeRatingValue);
+    }
+  }, [activeFilters]);
+
+  // Update parent component when filters change
+  useEffect(() => {
+    if (onFilterChange) {
+      const activeRoles = roleOptions.filter((role) =>
+        roleFilters.includes(role.value)
+      );
+      const activeCompanies = companyOptions.filter((company) =>
+        companyFilters.includes(company.value)
+      );
+      const activeSlots = slotFilter
+        ? slotOptions.filter((slot) => slot.value === slotFilter)
+        : [];
+      const activeRatings = ratingFilter
+        ? ratingOptions.filter((rating) => rating.value === ratingFilter)
+        : [];
+
+      onFilterChange({
+        roles: activeRoles,
+        companies: activeCompanies,
+        slots: activeSlots,
+        ratings: activeRatings,
+      });
+    }
+  }, [roleFilters, companyFilters, slotFilter, ratingFilter]);
+
   // Handle role filter changes
   const handleRoleFilterChange = (value: string) => {
     setRoleFilters((prev) => {
@@ -123,6 +205,16 @@ export function MentorSearch({ onSearch }: MentorSearchProps) {
         return [...prev, value];
       }
     });
+  };
+
+  // Handle slot filter changes
+  const handleSlotFilterChange = (value: string) => {
+    setSlotFilter((prev) => (prev === value ? "" : value));
+  };
+
+  // Handle rating filter changes
+  const handleRatingFilterChange = (value: string) => {
+    setRatingFilter((prev) => (prev === value ? "" : value));
   };
 
   // Generate autocomplete suggestions based on the current search value
@@ -356,13 +448,13 @@ export function MentorSearch({ onSearch }: MentorSearchProps) {
         />
         <SlotFilterButton
           slotFilter={slotFilter}
-          onSlotChange={setSlotFilter}
+          onSlotChange={handleSlotFilterChange}
           isOpen={isSlotOpen}
           setIsOpen={setIsSlotOpen}
         />
         <RatingFilterButton
           ratingFilter={ratingFilter}
-          onRatingChange={setRatingFilter}
+          onRatingChange={handleRatingFilterChange}
           isOpen={isRatingOpen}
           setIsOpen={setIsRatingOpen}
         />

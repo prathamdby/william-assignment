@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { MentorCard } from "@/components/MentorCard";
 import { MentorSearch } from "@/components/MentorSearch";
 import { NoResultsToast } from "@/components/ui/no-results-toast";
+import { ActiveFilters, FilterOption } from "@/components/ActiveFilters";
 
 // Sample mentor data
 const mentorsData = [
@@ -17,6 +18,10 @@ const mentorsData = [
     imgSrc: "/images/jonny_rose.jpg",
     isVerified: true,
     reviews: 3,
+    role: "se-sde",
+    companyType: "faang",
+    availability: "next-week",
+    rating: 5,
   },
   {
     id: 2,
@@ -27,6 +32,10 @@ const mentorsData = [
     imgSrc: "/images/dev_jain.jpg",
     isVerified: true,
     reviews: 3,
+    role: "se-sde",
+    companyType: "faang",
+    availability: "this-week",
+    rating: 4.8,
   },
   {
     id: 3,
@@ -37,6 +46,10 @@ const mentorsData = [
     imgSrc: "/images/rishi_mehta.jpg",
     isVerified: true,
     reviews: 3,
+    role: "se-sde",
+    companyType: "mncs",
+    availability: "anytime",
+    rating: 4.5,
   },
   {
     id: 4,
@@ -47,6 +60,10 @@ const mentorsData = [
     imgSrc: "/images/heet_mistry.jpg",
     isVerified: false,
     reviews: 3,
+    role: "ds-ai-ml",
+    companyType: "startups",
+    availability: "next-week",
+    rating: 4.2,
   },
 ];
 
@@ -55,22 +72,66 @@ export default function MentorsPage() {
   const [filteredMentors, setFilteredMentors] = useState(mentorsData);
   const [showNoResultsToast, setShowNoResultsToast] = useState(false);
 
-  // Filter mentors when search term changes
+  // State for active filters
+  const [activeFilters, setActiveFilters] = useState<{
+    roles: FilterOption[];
+    companies: FilterOption[];
+    slots: FilterOption[];
+    ratings: FilterOption[];
+  }>({
+    roles: [],
+    companies: [],
+    slots: [],
+    ratings: [],
+  });
+
+  // Apply both search and filter criteria when either changes
   useEffect(() => {
-    // If search term is empty, show all mentors
-    if (!searchTerm || !searchTerm.trim()) {
-      setFilteredMentors(mentorsData);
-      return;
+    let filtered = mentorsData;
+
+    // Apply search term filter
+    if (searchTerm && searchTerm.trim()) {
+      const lowercaseSearchTerm = searchTerm.toLowerCase();
+      filtered = filtered.filter(
+        (mentor) =>
+          mentor.name.toLowerCase().includes(lowercaseSearchTerm) ||
+          mentor.company.toLowerCase().includes(lowercaseSearchTerm) ||
+          mentor.title.toLowerCase().includes(lowercaseSearchTerm) ||
+          mentor.bio.toLowerCase().includes(lowercaseSearchTerm)
+      );
     }
 
-    const lowercaseSearchTerm = searchTerm.toLowerCase();
-    const filtered = mentorsData.filter(
-      (mentor) =>
-        mentor.name.toLowerCase().includes(lowercaseSearchTerm) ||
-        mentor.company.toLowerCase().includes(lowercaseSearchTerm) ||
-        mentor.title.toLowerCase().includes(lowercaseSearchTerm) ||
-        mentor.bio.toLowerCase().includes(lowercaseSearchTerm)
-    );
+    // Apply role filters
+    if (activeFilters.roles.length > 0) {
+      const roleValues = activeFilters.roles.map((role) => role.value);
+      filtered = filtered.filter((mentor) => roleValues.includes(mentor.role));
+    }
+
+    // Apply company filters
+    if (activeFilters.companies.length > 0) {
+      const companyValues = activeFilters.companies.map(
+        (company) => company.value
+      );
+      filtered = filtered.filter((mentor) =>
+        companyValues.includes(mentor.companyType)
+      );
+    }
+
+    // Apply slot filter
+    if (activeFilters.slots.length > 0) {
+      const slotValue = activeFilters.slots[0].value; // Only one slot can be selected
+      filtered = filtered.filter((mentor) => mentor.availability === slotValue);
+    }
+
+    // Apply rating filter
+    if (activeFilters.ratings.length > 0) {
+      const ratingValue = activeFilters.ratings[0].value; // Only one rating can be selected
+      if (ratingValue === "high-to-low") {
+        filtered = filtered.sort((a, b) => b.rating - a.rating);
+      } else if (ratingValue === "low-to-high") {
+        filtered = filtered.sort((a, b) => a.rating - b.rating);
+      }
+    }
 
     // Show toast if no results found
     if (filtered.length === 0) {
@@ -80,25 +141,47 @@ export default function MentorsPage() {
     }
 
     setFilteredMentors(filtered);
-  }, [searchTerm]);
+  }, [searchTerm, activeFilters]);
 
   // Handle search from MentorSearch component
   const handleSearch = (term: string) => {
     setSearchTerm(term);
+  };
 
-    // If it's a non-matching search term, show toast
-    if (
-      term &&
-      !mentorsData.some(
-        (mentor) =>
-          mentor.name.toLowerCase().includes(term.toLowerCase()) ||
-          mentor.company.toLowerCase().includes(term.toLowerCase()) ||
-          mentor.title.toLowerCase().includes(term.toLowerCase()) ||
-          mentor.bio.toLowerCase().includes(term.toLowerCase())
-      )
-    ) {
-      setShowNoResultsToast(true);
-    }
+  // Handle filter changes from MentorSearch component
+  const handleFilterChange = (filters: {
+    roles: FilterOption[];
+    companies: FilterOption[];
+    slots: FilterOption[];
+    ratings: FilterOption[];
+  }) => {
+    setActiveFilters(filters);
+  };
+
+  // Handle removing a filter tag
+  const handleRemoveFilter = (filterType: string, value: string) => {
+    setActiveFilters((prev) => {
+      const newFilters = { ...prev };
+
+      switch (filterType) {
+        case "roles":
+          newFilters.roles = prev.roles.filter((role) => role.value !== value);
+          break;
+        case "companies":
+          newFilters.companies = prev.companies.filter(
+            (company) => company.value !== value
+          );
+          break;
+        case "slots":
+          newFilters.slots = [];
+          break;
+        case "ratings":
+          newFilters.ratings = [];
+          break;
+      }
+
+      return newFilters;
+    });
   };
 
   // Hide the no results toast
@@ -131,10 +214,20 @@ export default function MentorsPage() {
       </div>
 
       <div className="py-6 px-[106px]">
-        <MentorSearch onSearch={handleSearch} />
+        <MentorSearch
+          onSearch={handleSearch}
+          onFilterChange={handleFilterChange}
+          activeFilters={activeFilters}
+        />
       </div>
 
-      <div className="flex-1 px-[106px] py-4 space-y-4">
+      {/* Active Filters */}
+      <ActiveFilters
+        activeFilters={activeFilters}
+        onRemoveFilter={handleRemoveFilter}
+      />
+
+      <div className="flex-1 px-[106px] space-y-4">
         {filteredMentors.length > 0 ? (
           filteredMentors.map((mentor) => (
             <MentorCard
