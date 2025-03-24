@@ -3,8 +3,31 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, ChevronDown, TrendingUp, Clock, X } from "lucide-react";
+import {
+  Search,
+  ChevronDown,
+  ChevronUp,
+  TrendingUp,
+  Clock,
+  X,
+} from "lucide-react";
 import { NoResultsToast } from "@/components/ui/no-results-toast";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+// Role options for filter
+const roleOptions = [
+  { id: 1, label: "SE/SDE", value: "se-sde" },
+  { id: 2, label: "DS/AI/ML", value: "ds-ai-ml" },
+  { id: 3, label: "Product Management", value: "product-management" },
+  { id: 4, label: "Project Management", value: "project-management" },
+  { id: 5, label: "Consulting", value: "consulting" },
+  { id: 6, label: "Quantitative Finance", value: "quantitative-finance" },
+];
 
 interface MentorSearchProps {
   onSearch?: (term: string) => void;
@@ -31,15 +54,37 @@ export function MentorSearch({ onSearch }: MentorSearchProps) {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [recentSearches, setRecentSearches] = useState<
-    Array<{ id: number; label: string }>
+    { id: number; label: string }[]
   >([]);
   const searchRef = useRef<HTMLDivElement>(null);
   const [showNoResultsToast, setShowNoResultsToast] = useState(false);
 
+  // Add states for filters
+  const [roleFilters, setRoleFilters] = useState<string[]>([]);
+  const [isRoleOpen, setIsRoleOpen] = useState(false);
+
+  // Other filter states that would be added in a complete implementation
+  const [companyFilters, setCompanyFilters] = useState<string[]>([]);
+  const [slotFilters, setSlotFilters] = useState<string[]>([]);
+  const [ratingFilters, setRatingFilters] = useState<string[]>([]);
+
   const trendingSearches = [
     { id: 1, label: "Microsoft" },
     { id: 2, label: "Slack" },
+    { id: 3, label: "Google" },
+    { id: 4, label: "Amazon" },
   ];
+
+  // Handle role filter changes
+  const handleRoleFilterChange = (value: string) => {
+    setRoleFilters((prev) => {
+      if (prev.includes(value)) {
+        return prev.filter((item) => item !== value);
+      } else {
+        return [...prev, value];
+      }
+    });
+  };
 
   // Generate autocomplete suggestions based on the current search value
   const suggestions = useMemo(() => {
@@ -55,20 +100,6 @@ export function MentorSearch({ onSearch }: MentorSearchProps) {
       .slice(0, 5); // Limit to 5 suggestions
   }, [searchValue]);
 
-  // Load recent searches from localStorage on component mount
-  useEffect(() => {
-    const storedSearches = localStorage.getItem("recentSearches");
-    if (storedSearches) {
-      try {
-        setRecentSearches(JSON.parse(storedSearches));
-      } catch (error) {
-        console.error("Failed to parse recent searches:", error);
-        setRecentSearches([]);
-      }
-    }
-  }, []);
-
-  // Handle clicks outside the search component to close dropdown
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -89,90 +120,76 @@ export function MentorSearch({ onSearch }: MentorSearchProps) {
   const addToRecentSearches = (term: string) => {
     if (!term.trim()) return;
 
-    // Create a new array with the new search at the beginning
-    const updatedSearches = [
-      { id: Date.now(), label: term },
-      ...recentSearches
-        .filter((item) => item.label.toLowerCase() !== term.toLowerCase())
-        .slice(0, 4),
-    ];
+    // Check if term already exists
+    const existingIndex = recentSearches.findIndex(
+      (item) => item.label.toLowerCase() === term.toLowerCase()
+    );
 
-    setRecentSearches(updatedSearches);
-    localStorage.setItem("recentSearches", JSON.stringify(updatedSearches));
+    // If exists, remove it to re-add at top
+    if (existingIndex !== -1) {
+      const updatedSearches = [...recentSearches];
+      updatedSearches.splice(existingIndex, 1);
+      setRecentSearches([{ id: Date.now(), label: term }, ...updatedSearches]);
+    } else {
+      // If doesn't exist, add to top (limited to 5 items)
+      setRecentSearches([
+        { id: Date.now(), label: term },
+        ...recentSearches.slice(0, 4),
+      ]);
+    }
   };
 
   // Handle search submission
   const handleSearch = (term: string) => {
-    // If empty search, reset search results but don't add to recent searches
-    if (!term.trim()) {
-      setIsSearchFocused(false);
-
-      // Call onSearch with empty string to reset search
-      if (onSearch) {
-        onSearch("");
-      }
-      return;
-    }
-
     addToRecentSearches(term);
+    setSearchValue(term);
     setIsSearchFocused(false);
 
-    // Call the onSearch prop if provided
+    // Call the parent component's search handler if provided
     if (onSearch) {
       onSearch(term);
     }
 
-    // Check if there would be any results for this search (simulate API response)
-    const normalizedTerm = term.toLowerCase().trim();
-    const hasResults = searchSuggestions.some((suggestion) =>
-      suggestion.toLowerCase().includes(normalizedTerm)
-    );
-
-    if (!hasResults) {
+    // Only show toast if there's a search term and no matching results in searchSuggestions
+    if (
+      term.trim() &&
+      !searchSuggestions.some((suggestion) =>
+        suggestion.toLowerCase().includes(term.toLowerCase())
+      )
+    ) {
       setShowNoResultsToast(true);
+      setTimeout(() => setShowNoResultsToast(false), 3000);
     }
-
-    // In a real app, this would likely trigger a search action or route change
-    console.log(`Searching for: ${term}`);
   };
 
-  // Handle form submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     handleSearch(searchValue);
   };
 
-  // Handle selecting an item from dropdown
   const handleSearchItemClick = (term: string) => {
-    setSearchValue(term);
     handleSearch(term);
   };
 
-  // Clear a specific recent search
   const clearRecentSearch = (e: React.MouseEvent, id: number) => {
-    e.stopPropagation(); // Prevent triggering the parent onClick
-    const updatedSearches = recentSearches.filter((item) => item.id !== id);
-    setRecentSearches(updatedSearches);
-    localStorage.setItem("recentSearches", JSON.stringify(updatedSearches));
+    e.stopPropagation();
+    setRecentSearches(recentSearches.filter((item) => item.id !== id));
   };
 
-  // Clear the search input and reset results
   const clearSearch = () => {
     setSearchValue("");
-    if (onSearch) {
-      onSearch("");
+    // Focus the input after clearing
+    const inputElement = searchRef.current?.querySelector("input");
+    if (inputElement) {
+      inputElement.focus();
     }
   };
 
-  // Hide the no results toast
   const hideNoResultsToast = () => {
     setShowNoResultsToast(false);
   };
 
-  // What to display in the dropdown depends on:
-  // 1. If typing (show suggestions)
-  // 2. If focused but empty (show recent + trending)
-  // 3. If not focused (show nothing)
+  // Determine if we should show the autocomplete suggestions
   const showSuggestions =
     isSearchFocused && searchValue.trim() !== "" && suggestions.length > 0;
   const showRecentAndTrending = isSearchFocused && searchValue.trim() === "";
@@ -286,12 +303,105 @@ export function MentorSearch({ onSearch }: MentorSearchProps) {
       </div>
 
       <div className="flex items-center gap-6">
-        <FilterButton label="Role" />
+        <RoleFilterButton
+          roleFilters={roleFilters}
+          onRoleChange={handleRoleFilterChange}
+          isOpen={isRoleOpen}
+          setIsOpen={setIsRoleOpen}
+        />
         <FilterButton label="Company" />
         <FilterButton label="Slot" />
         <FilterButton label="Rating" />
       </div>
     </div>
+  );
+}
+
+interface RoleFilterButtonProps {
+  roleFilters: string[];
+  onRoleChange: (value: string) => void;
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+}
+
+function RoleFilterButton({
+  roleFilters,
+  onRoleChange,
+  isOpen,
+  setIsOpen,
+}: RoleFilterButtonProps) {
+  return (
+    <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="outline"
+          className={`relative h-10 px-3 py-1.5 text-xs font-medium border-[#CBD5E1] ${
+            isOpen
+              ? "bg-[#F8FAFC] text-[#334155] border-[#CBD5E1]"
+              : "text-[#334155]"
+          } rounded-md flex items-center gap-2`}
+        >
+          Role
+          {isOpen ? (
+            <ChevronUp size={16} className="text-[#94A3B8]" />
+          ) : (
+            <ChevronDown size={16} className="text-[#94A3B8]" />
+          )}
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
+        align="start"
+        className="bg-white w-[184px] shadow-lg rounded-[6px] border border-[#E2E8F0] mt-1 p-1 overflow-visible"
+        style={{
+          boxShadow:
+            "0px 10px 15px 0px rgba(0, 0, 0, 0.1), 0px 4px 6px 0px rgba(0, 0, 0, 0.05)",
+        }}
+        sideOffset={5}
+      >
+        <div className="relative">
+          <div className="absolute top-[-9px] left-[24px] w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-b-[8px] border-b-[#E2E8F0]"></div>
+          <div className="absolute top-[-8px] left-[24px] w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-b-[8px] border-b-white"></div>
+        </div>
+        <div className="py-1">
+          {roleOptions.map((option) => (
+            <div
+              key={option.id}
+              className="flex items-center gap-2 px-2 py-1.5 hover:bg-[#F8FAFC] rounded-[6px] cursor-pointer"
+              onClick={() => onRoleChange(option.value)}
+            >
+              <div
+                className={`h-4 w-4 border ${
+                  roleFilters.includes(option.value)
+                    ? "border-[#334155]"
+                    : "border-[#94A3B8]"
+                } rounded-sm flex items-center justify-center`}
+              >
+                {roleFilters.includes(option.value) && (
+                  <svg
+                    width="10"
+                    height="10"
+                    viewBox="0 0 10 10"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M8.33334 2.5L3.75001 7.08333L1.66667 5"
+                      stroke="#334155"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                )}
+              </div>
+              <span className="text-xs font-medium text-[#334155]">
+                {option.label}
+              </span>
+            </div>
+          ))}
+        </div>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
 
