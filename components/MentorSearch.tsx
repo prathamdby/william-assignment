@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, ChevronDown, TrendingUp, Clock, X } from "lucide-react";
@@ -8,6 +8,23 @@ import { Search, ChevronDown, TrendingUp, Clock, X } from "lucide-react";
 interface MentorSearchProps {
   onSearch?: (term: string) => void;
 }
+
+// Mock mentor data for suggestions - in a real app, this would come from API or props
+const searchSuggestions = [
+  "Google",
+  "Microsoft",
+  "Amazon",
+  "Apple",
+  "Facebook",
+  "Slack",
+  "JP Morgan",
+  "Goldman Sachs",
+  "Zomato",
+  "Full Stack Developer",
+  "Software Engineer",
+  "Product Manager",
+  "Data Scientist",
+];
 
 export function MentorSearch({ onSearch }: MentorSearchProps) {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
@@ -21,6 +38,20 @@ export function MentorSearch({ onSearch }: MentorSearchProps) {
     { id: 1, label: "Microsoft" },
     { id: 2, label: "Slack" },
   ];
+
+  // Generate autocomplete suggestions based on the current search value
+  const suggestions = useMemo(() => {
+    if (!searchValue.trim()) return [];
+
+    const normalizedInput = searchValue.toLowerCase().trim();
+    return searchSuggestions
+      .filter(
+        (suggestion) =>
+          suggestion.toLowerCase().includes(normalizedInput) &&
+          suggestion.toLowerCase() !== normalizedInput
+      )
+      .slice(0, 5); // Limit to 5 suggestions
+  }, [searchValue]);
 
   // Load recent searches from localStorage on component mount
   useEffect(() => {
@@ -121,6 +152,14 @@ export function MentorSearch({ onSearch }: MentorSearchProps) {
     }
   };
 
+  // What to display in the dropdown depends on:
+  // 1. If typing (show suggestions)
+  // 2. If focused but empty (show recent + trending)
+  // 3. If not focused (show nothing)
+  const showSuggestions =
+    isSearchFocused && searchValue.trim() !== "" && suggestions.length > 0;
+  const showRecentAndTrending = isSearchFocused && searchValue.trim() === "";
+
   return (
     <div className="flex justify-between items-center w-full">
       <div className="relative" ref={searchRef}>
@@ -149,7 +188,28 @@ export function MentorSearch({ onSearch }: MentorSearchProps) {
           </div>
         </form>
 
-        {isSearchFocused && (
+        {/* Autocomplete Suggestions Dropdown */}
+        {showSuggestions && (
+          <div className="absolute top-full left-0 w-full mt-1 bg-white rounded-md border border-[#E2E8F0] shadow-lg z-10 p-3 pb-4">
+            <div className="flex flex-col">
+              <div className="flex flex-col">
+                {suggestions.map((suggestion, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center gap-2 py-1 px-2 hover:bg-[#F1F5F9] rounded cursor-pointer"
+                    onClick={() => handleSearchItemClick(suggestion)}
+                  >
+                    <Search size={16} className="text-[#94A3B8]" />
+                    <span className="text-xs text-[#334155]">{suggestion}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Recent & Trending Searches Dropdown */}
+        {showRecentAndTrending && (
           <div className="absolute top-full left-0 w-full mt-1 bg-white rounded-md border border-[#E2E8F0] shadow-lg z-10 p-3 pb-4">
             {/* Recent Searches Section */}
             {recentSearches.length > 0 && (
