@@ -115,9 +115,18 @@ export default function MentorsPage() {
           <h1 className="text-2xl font-medium font-montserrat text-[#0F172A]">
             Mentors
           </h1>
-          <button className="h-10 px-4 py-2 text-xs font-semibold border border-[#CBD5E1] rounded-md text-[#334155]">
+          <Button
+            className="text-sm font-medium bg-white border border-[#CBD5E1] rounded-[6px] text-[#334155] shadow-[0_1px_2px_rgba(15,23,42,0.05)] hover:bg-white hover:text-[#334155] hover:border-[#CBD5E1] focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none transition-none flex items-center justify-center"
+            style={{
+              paddingLeft: "16px",
+              paddingRight: "16px",
+              paddingTop: "6px",
+              paddingBottom: "6px",
+            }}
+            variant="ghost"
+          >
             Become a mentor
-          </button>
+          </Button>
         </div>
       </div>
 
