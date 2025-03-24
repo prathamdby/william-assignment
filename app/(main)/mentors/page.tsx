@@ -1,9 +1,12 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { MentorCard } from "@/components/MentorCard";
 import { MentorSearch } from "@/components/MentorSearch";
 
 // Sample mentor data
-const mentors = [
+const mentorsData = [
   {
     id: 1,
     name: "Jonny Rose",
@@ -47,6 +50,34 @@ const mentors = [
 ];
 
 export default function MentorsPage() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredMentors, setFilteredMentors] = useState(mentorsData);
+
+  // Filter mentors when search term changes
+  useEffect(() => {
+    // If search term is empty, show all mentors
+    if (!searchTerm || !searchTerm.trim()) {
+      setFilteredMentors(mentorsData);
+      return;
+    }
+
+    const lowercaseSearchTerm = searchTerm.toLowerCase();
+    const filtered = mentorsData.filter(
+      (mentor) =>
+        mentor.name.toLowerCase().includes(lowercaseSearchTerm) ||
+        mentor.company.toLowerCase().includes(lowercaseSearchTerm) ||
+        mentor.title.toLowerCase().includes(lowercaseSearchTerm) ||
+        mentor.bio.toLowerCase().includes(lowercaseSearchTerm)
+    );
+
+    setFilteredMentors(filtered);
+  }, [searchTerm]);
+
+  // Handle search from MentorSearch component
+  const handleSearch = (term: string) => {
+    setSearchTerm(term);
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
       <div className="bg-[#DBEAFE] py-4 px-[106px]">
@@ -61,22 +92,28 @@ export default function MentorsPage() {
       </div>
 
       <div className="py-6 px-[106px]">
-        <MentorSearch />
+        <MentorSearch onSearch={handleSearch} />
       </div>
 
       <div className="flex-1 px-[106px] py-4 space-y-4">
-        {mentors.map((mentor) => (
-          <MentorCard
-            key={mentor.id}
-            name={mentor.name}
-            title={mentor.title}
-            company={mentor.company}
-            bio={mentor.bio}
-            imgSrc={mentor.imgSrc}
-            isVerified={mentor.isVerified}
-            reviews={mentor.reviews}
-          />
-        ))}
+        {filteredMentors.length > 0 ? (
+          filteredMentors.map((mentor) => (
+            <MentorCard
+              key={mentor.id}
+              name={mentor.name}
+              title={mentor.title}
+              company={mentor.company}
+              bio={mentor.bio}
+              imgSrc={mentor.imgSrc}
+              isVerified={mentor.isVerified}
+              reviews={mentor.reviews}
+            />
+          ))
+        ) : (
+          <div className="text-center py-12 text-gray-500">
+            No mentors found matching your search criteria.
+          </div>
+        )}
       </div>
     </div>
   );
