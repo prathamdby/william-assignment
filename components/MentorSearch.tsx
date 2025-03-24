@@ -29,6 +29,14 @@ const roleOptions = [
   { id: 6, label: "Quantitative Finance", value: "quantitative-finance" },
 ];
 
+// Company options for filter
+const companyOptions = [
+  { id: 1, label: "FAANG", value: "faang" },
+  { id: 2, label: "Startups", value: "startups" },
+  { id: 3, label: "MNC's", value: "mncs" },
+  { id: 4, label: "Others", value: "others" },
+];
+
 interface MentorSearchProps {
   onSearch?: (term: string) => void;
 }
@@ -63,8 +71,11 @@ export function MentorSearch({ onSearch }: MentorSearchProps) {
   const [roleFilters, setRoleFilters] = useState<string[]>([]);
   const [isRoleOpen, setIsRoleOpen] = useState(false);
 
-  // Other filter states that would be added in a complete implementation
+  // Company filter states
   const [companyFilters, setCompanyFilters] = useState<string[]>([]);
+  const [isCompanyOpen, setIsCompanyOpen] = useState(false);
+
+  // Other filter states that would be added in a complete implementation
   const [slotFilters, setSlotFilters] = useState<string[]>([]);
   const [ratingFilters, setRatingFilters] = useState<string[]>([]);
 
@@ -78,6 +89,17 @@ export function MentorSearch({ onSearch }: MentorSearchProps) {
   // Handle role filter changes
   const handleRoleFilterChange = (value: string) => {
     setRoleFilters((prev) => {
+      if (prev.includes(value)) {
+        return prev.filter((item) => item !== value);
+      } else {
+        return [...prev, value];
+      }
+    });
+  };
+
+  // Handle company filter changes
+  const handleCompanyFilterChange = (value: string) => {
+    setCompanyFilters((prev) => {
       if (prev.includes(value)) {
         return prev.filter((item) => item !== value);
       } else {
@@ -309,7 +331,12 @@ export function MentorSearch({ onSearch }: MentorSearchProps) {
           isOpen={isRoleOpen}
           setIsOpen={setIsRoleOpen}
         />
-        <FilterButton label="Company" />
+        <CompanyFilterButton
+          companyFilters={companyFilters}
+          onCompanyChange={handleCompanyFilterChange}
+          isOpen={isCompanyOpen}
+          setIsOpen={setIsCompanyOpen}
+        />
         <FilterButton label="Slot" />
         <FilterButton label="Rating" />
       </div>
@@ -351,12 +378,12 @@ function RoleFilterButton({
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="start"
-        className="bg-white w-[184px] shadow-lg rounded-[6px] border border-[#E2E8F0] mt-1 p-1 overflow-visible"
+        className="bg-white w-[184px] shadow-lg rounded-[6px] border border-[#E2E8F0] mt-4 p-1 overflow-visible"
         style={{
           boxShadow:
             "0px 10px 15px 0px rgba(0, 0, 0, 0.1), 0px 4px 6px 0px rgba(0, 0, 0, 0.05)",
         }}
-        sideOffset={5}
+        sideOffset={0}
       >
         <div className="relative">
           <div className="absolute top-[-9px] left-[24px] w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-b-[8px] border-b-[#E2E8F0]"></div>
@@ -377,6 +404,94 @@ function RoleFilterButton({
                 } rounded-sm flex items-center justify-center`}
               >
                 {roleFilters.includes(option.value) && (
+                  <svg
+                    width="10"
+                    height="10"
+                    viewBox="0 0 10 10"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M8.33334 2.5L3.75001 7.08333L1.66667 5"
+                      stroke="#334155"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                )}
+              </div>
+              <span className="text-xs font-medium text-[#334155]">
+                {option.label}
+              </span>
+            </div>
+          ))}
+        </div>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
+interface CompanyFilterButtonProps {
+  companyFilters: string[];
+  onCompanyChange: (value: string) => void;
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+}
+
+function CompanyFilterButton({
+  companyFilters,
+  onCompanyChange,
+  isOpen,
+  setIsOpen,
+}: CompanyFilterButtonProps) {
+  return (
+    <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="outline"
+          className={`relative h-10 px-3 py-1.5 text-xs font-medium border-[#CBD5E1] ${
+            isOpen
+              ? "bg-[#F8FAFC] text-[#334155] border-[#CBD5E1]"
+              : "text-[#334155]"
+          } rounded-md flex items-center gap-2`}
+        >
+          Company
+          {isOpen ? (
+            <ChevronUp size={16} className="text-[#94A3B8]" />
+          ) : (
+            <ChevronDown size={16} className="text-[#94A3B8]" />
+          )}
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
+        align="start"
+        className="bg-white w-[184px] shadow-lg rounded-[6px] border border-[#E2E8F0] mt-4 p-1 overflow-visible"
+        style={{
+          boxShadow:
+            "0px 10px 15px 0px rgba(0, 0, 0, 0.1), 0px 4px 6px 0px rgba(0, 0, 0, 0.05)",
+        }}
+        sideOffset={0}
+      >
+        <div className="relative">
+          <div className="absolute top-[-9px] left-[24px] w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-b-[8px] border-b-[#E2E8F0]"></div>
+          <div className="absolute top-[-8px] left-[24px] w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-b-[8px] border-b-white"></div>
+        </div>
+        <div className="py-1">
+          {companyOptions.map((option) => (
+            <div
+              key={option.id}
+              className="flex items-center gap-2 px-2 py-1.5 hover:bg-[#F8FAFC] rounded-[6px] cursor-pointer"
+              onClick={() => onCompanyChange(option.value)}
+            >
+              <div
+                className={`h-4 w-4 border ${
+                  companyFilters.includes(option.value)
+                    ? "border-[#334155]"
+                    : "border-[#94A3B8]"
+                } rounded-sm flex items-center justify-center`}
+              >
+                {companyFilters.includes(option.value) && (
                   <svg
                     width="10"
                     height="10"
