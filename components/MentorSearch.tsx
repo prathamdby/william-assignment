@@ -37,6 +37,13 @@ const companyOptions = [
   { id: 4, label: "Others", value: "others" },
 ];
 
+// Slot options for filter
+const slotOptions = [
+  { id: 1, label: "This week", value: "this-week" },
+  { id: 2, label: "Next week", value: "next-week" },
+  { id: 3, label: "Anytime", value: "anytime" },
+];
+
 interface MentorSearchProps {
   onSearch?: (term: string) => void;
 }
@@ -75,8 +82,11 @@ export function MentorSearch({ onSearch }: MentorSearchProps) {
   const [companyFilters, setCompanyFilters] = useState<string[]>([]);
   const [isCompanyOpen, setIsCompanyOpen] = useState(false);
 
+  // Slot filter states - using a single string since radio buttons only allow one selection
+  const [slotFilter, setSlotFilter] = useState<string>("");
+  const [isSlotOpen, setIsSlotOpen] = useState(false);
+
   // Other filter states that would be added in a complete implementation
-  const [slotFilters, setSlotFilters] = useState<string[]>([]);
   const [ratingFilters, setRatingFilters] = useState<string[]>([]);
 
   const trendingSearches = [
@@ -337,7 +347,12 @@ export function MentorSearch({ onSearch }: MentorSearchProps) {
           isOpen={isCompanyOpen}
           setIsOpen={setIsCompanyOpen}
         />
-        <FilterButton label="Slot" />
+        <SlotFilterButton
+          slotFilter={slotFilter}
+          onSlotChange={setSlotFilter}
+          isOpen={isSlotOpen}
+          setIsOpen={setIsSlotOpen}
+        />
         <FilterButton label="Rating" />
       </div>
     </div>
@@ -507,6 +522,80 @@ function CompanyFilterButton({
                       strokeLinejoin="round"
                     />
                   </svg>
+                )}
+              </div>
+              <span className="text-xs font-medium text-[#334155]">
+                {option.label}
+              </span>
+            </div>
+          ))}
+        </div>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
+interface SlotFilterButtonProps {
+  slotFilter: string;
+  onSlotChange: (value: string) => void;
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+}
+
+function SlotFilterButton({
+  slotFilter,
+  onSlotChange,
+  isOpen,
+  setIsOpen,
+}: SlotFilterButtonProps) {
+  return (
+    <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="outline"
+          className={`relative h-10 px-3 py-1.5 text-xs font-medium border-[#CBD5E1] ${
+            isOpen
+              ? "bg-[#F8FAFC] text-[#334155] border-[#CBD5E1]"
+              : "text-[#334155]"
+          } rounded-md flex items-center gap-2`}
+        >
+          Slot
+          {isOpen ? (
+            <ChevronUp size={16} className="text-[#94A3B8]" />
+          ) : (
+            <ChevronDown size={16} className="text-[#94A3B8]" />
+          )}
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
+        align="start"
+        className="bg-white w-[184px] shadow-lg rounded-[6px] border border-[#E2E8F0] mt-4 p-1 overflow-visible"
+        style={{
+          boxShadow:
+            "0px 10px 15px 0px rgba(0, 0, 0, 0.1), 0px 4px 6px 0px rgba(0, 0, 0, 0.05)",
+        }}
+        sideOffset={0}
+      >
+        <div className="relative">
+          <div className="absolute top-[-9px] left-[24px] w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-b-[8px] border-b-[#E2E8F0]"></div>
+          <div className="absolute top-[-8px] left-[24px] w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-b-[8px] border-b-white"></div>
+        </div>
+        <div className="py-1">
+          {slotOptions.map((option) => (
+            <div
+              key={option.id}
+              className="flex items-center gap-2 px-2 py-1.5 hover:bg-[#F8FAFC] rounded-[6px] cursor-pointer"
+              onClick={() => onSlotChange(option.value)}
+            >
+              <div
+                className={`h-4 w-4 rounded-full border ${
+                  slotFilter === option.value
+                    ? "border-[#334155]"
+                    : "border-[#94A3B8]"
+                } flex items-center justify-center`}
+              >
+                {slotFilter === option.value && (
+                  <div className="h-2 w-2 rounded-full bg-[#334155]"></div>
                 )}
               </div>
               <span className="text-xs font-medium text-[#334155]">
