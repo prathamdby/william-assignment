@@ -139,7 +139,7 @@ export function MentorSearch({
 
     // Update company filters
     const activeCompanyValues = activeFilters.companies.map(
-      (company) => company.value
+      (company) => company.value,
     );
     if (areArraysDifferent(activeCompanyValues, companyFilters)) {
       setCompanyFilters(activeCompanyValues);
@@ -164,10 +164,10 @@ export function MentorSearch({
   useEffect(() => {
     if (onFilterChange) {
       const activeRoles = roleOptions.filter((role) =>
-        roleFilters.includes(role.value)
+        roleFilters.includes(role.value),
       );
       const activeCompanies = companyOptions.filter((company) =>
-        companyFilters.includes(company.value)
+        companyFilters.includes(company.value),
       );
       const activeSlots = slotFilter
         ? slotOptions.filter((slot) => slot.value === slotFilter)
@@ -226,7 +226,7 @@ export function MentorSearch({
       .filter(
         (suggestion) =>
           suggestion.toLowerCase().includes(normalizedInput) &&
-          suggestion.toLowerCase() !== normalizedInput
+          suggestion.toLowerCase() !== normalizedInput,
       )
       .slice(0, 5); // Limit to 5 suggestions
   }, [searchValue]);
@@ -253,7 +253,7 @@ export function MentorSearch({
 
     // Check if term already exists
     const existingIndex = recentSearches.findIndex(
-      (item) => item.label.toLowerCase() === term.toLowerCase()
+      (item) => item.label.toLowerCase() === term.toLowerCase(),
     );
 
     // If exists, remove it to re-add at top
@@ -285,7 +285,7 @@ export function MentorSearch({
     if (
       term.trim() &&
       !searchSuggestions.some((suggestion) =>
-        suggestion.toLowerCase().includes(term.toLowerCase())
+        suggestion.toLowerCase().includes(term.toLowerCase()),
       )
     ) {
       setShowNoResultsToast(true);

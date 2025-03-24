@@ -47,7 +47,7 @@ export function SidebarNav() {
               "flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md",
               pathname === item.href
                 ? "bg-[#E2E8F0] text-[#0F172A]"
-                : "text-[#94A3B8] hover:text-[#0F172A] hover:bg-[#F1F5F9]"
+                : "text-[#94A3B8] hover:text-[#0F172A] hover:bg-[#F1F5F9]",
             )}
           >
             <item.icon className="w-4 h-4" />

@@ -43,7 +43,7 @@ export default function RootLayout({
         className={cn(
           "min-h-screen bg-white font-sans antialiased",
           fontSans.variable,
-          montserrat.variable
+          montserrat.variable,
         )}
       >
         {children}
