@@ -198,7 +198,23 @@ const services = [
       icon: <Calendar className="w-4 h-4 text-[#3B82F6]" />,
       label: "On 28th Oct",
     },
-    amount: { value: "1,000" },
+    amount: { value: "200" },
+  },
+  {
+    id: 5,
+    title: "Dealing with stakeholder",
+    description:
+      "I'll tell you practical strategies to deal with your stakeholder and how to conduct it smoothly",
+    type: "webinar",
+    serviceType: {
+      icon: <Presentation className="w-4 h-4 text-[#3B82F6]" />,
+      label: "Webinar",
+    },
+    date: {
+      icon: <Calendar className="w-4 h-4 text-[#3B82F6]" />,
+      label: "On 30th Dec",
+    },
+    amount: { value: "350" },
   },
 ];
 
