@@ -104,7 +104,7 @@ const mentorsData: MentorData[] = [
 
 // Get mentor data with proper typing
 const getMentorData = (
-  id: string,
+  id: string
 ): (MentorData & { sessions: number; isServicesDisabled?: boolean }) | null => {
   const mentor = mentorsData.find((m) => m.id === parseInt(id));
   if (!mentor) return null;
@@ -442,6 +442,8 @@ export default function MentorProfilePage({
                   {services.slice(0, 2).map((service) => (
                     <ServiceCard
                       key={service.id}
+                      id={service.id}
+                      mentorId={params.id}
                       title={service.title}
                       description={service.description}
                       serviceType={service.serviceType}
@@ -457,6 +459,8 @@ export default function MentorProfilePage({
                     {services.slice(2, 4).map((service) => (
                       <ServiceCard
                         key={service.id}
+                        id={service.id}
+                        mentorId={params.id}
                         title={service.title}
                         description={service.description}
                         serviceType={service.serviceType}
@@ -484,6 +488,8 @@ export default function MentorProfilePage({
                   .map((service) => (
                     <ServiceCard
                       key={service.id}
+                      id={service.id}
+                      mentorId={params.id}
                       title={service.title}
                       description={service.description}
                       serviceType={service.serviceType}
@@ -503,6 +509,8 @@ export default function MentorProfilePage({
                   .map((service) => (
                     <ServiceCard
                       key={service.id}
+                      id={service.id}
+                      mentorId={params.id}
                       title={service.title}
                       description={service.description}
                       serviceType={service.serviceType}
@@ -522,6 +530,8 @@ export default function MentorProfilePage({
                   .map((service) => (
                     <ServiceCard
                       key={service.id}
+                      id={service.id}
+                      mentorId={params.id}
                       title={service.title}
                       description={service.description}
                       serviceType={service.serviceType}
@@ -541,6 +551,8 @@ export default function MentorProfilePage({
                   .map((service) => (
                     <ServiceCard
                       key={service.id}
+                      id={service.id}
+                      mentorId={params.id}
                       title={service.title}
                       description={service.description}
                       serviceType={service.serviceType}

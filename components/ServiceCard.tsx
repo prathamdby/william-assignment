@@ -11,8 +11,11 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./ui/hover-card";
+import Link from "next/link";
 
 interface ServiceCardProps {
+  id: number;
+  mentorId: string;
   title: string;
   description: string;
   serviceType: {
@@ -41,6 +44,8 @@ interface ServiceCardProps {
 }
 
 export function ServiceCard({
+  id,
+  mentorId,
   title,
   description,
   serviceType,
@@ -54,9 +59,12 @@ export function ServiceCard({
       <div className="flex flex-col gap-2">
         <div className="flex justify-between items-start">
           <h3 className="text-xl font-semibold text-[#334155]">{title}</h3>
-          <button className="h-8 px-3 py-1.5 bg-[#334155] text-white text-xs font-semibold rounded-md">
+          <Link
+            href={`/mentor/${mentorId}/service/${id}`}
+            className="h-8 px-3 py-1.5 bg-[#334155] text-white text-xs font-semibold rounded-md hover:opacity-90"
+          >
             View Details
-          </button>
+          </Link>
         </div>
 
         <div className="pt-2 pb-2">
