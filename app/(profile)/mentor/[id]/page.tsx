@@ -414,7 +414,7 @@ export default function MentorProfilePage({
         </div>
       </div>
 
-      <div className="px-[106px] pb-12 flex flex-col gap-4">
+      <div className="px-[106px] pb-12 flex flex-col gap-4 mt-8">
         {reviewsData.map((review) => (
           <ReviewCard
             key={review.id}
