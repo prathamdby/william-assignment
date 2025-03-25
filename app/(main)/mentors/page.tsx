@@ -97,7 +97,7 @@ export default function MentorsPage() {
           mentor.name.toLowerCase().includes(lowercaseSearchTerm) ||
           mentor.company.toLowerCase().includes(lowercaseSearchTerm) ||
           mentor.title.toLowerCase().includes(lowercaseSearchTerm) ||
-          mentor.bio.toLowerCase().includes(lowercaseSearchTerm),
+          mentor.bio.toLowerCase().includes(lowercaseSearchTerm)
       );
     }
 
@@ -110,10 +110,10 @@ export default function MentorsPage() {
     // Apply company filters
     if (activeFilters.companies.length > 0) {
       const companyValues = activeFilters.companies.map(
-        (company) => company.value,
+        (company) => company.value
       );
       filtered = filtered.filter((mentor) =>
-        companyValues.includes(mentor.companyType),
+        companyValues.includes(mentor.companyType)
       );
     }
 
@@ -169,7 +169,7 @@ export default function MentorsPage() {
           break;
         case "companies":
           newFilters.companies = prev.companies.filter(
-            (company) => company.value !== value,
+            (company) => company.value !== value
           );
           break;
         case "slots":
@@ -232,6 +232,7 @@ export default function MentorsPage() {
           filteredMentors.map((mentor) => (
             <MentorCard
               key={mentor.id}
+              id={mentor.id}
               name={mentor.name}
               title={mentor.title}
               company={mentor.company}

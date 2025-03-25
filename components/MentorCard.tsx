@@ -3,8 +3,10 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { BadgeCheckIcon } from "lucide-react";
+import Link from "next/link";
 
 interface MentorCardProps {
+  id: number;
   name: string;
   title: string;
   company: string;
@@ -15,6 +17,7 @@ interface MentorCardProps {
 }
 
 export function MentorCard({
+  id,
   name,
   title,
   company,
@@ -69,9 +72,11 @@ export function MentorCard({
             </p>
           </div>
 
-          <button className="h-10 px-3 py-2 bg-[#334155] text-white text-xs font-semibold rounded-md">
-            View profile
-          </button>
+          <Link href={`/mentor/${id}`}>
+            <button className="h-10 px-3 py-2 bg-[#334155] text-white text-xs font-semibold rounded-md">
+              View profile
+            </button>
+          </Link>
         </div>
 
         <div className="p-3 bg-[#F1F5F9] rounded-md">
