@@ -371,7 +371,7 @@ export default function MentorProfilePage({
       </div>
 
       {/* Services content */}
-      <div className="px-[113px] py-6">
+      <div className="px-[113px] py-6 border-b border-[#E2E8F0]">
         {activeTab === "all" && (
           <div className="flex flex-col gap-8">
             <div className="grid grid-cols-2 gap-8">
