@@ -15,14 +15,21 @@ function Tab({ label, value, isActive, onClick }: TabProps) {
     <button
       onClick={() => onClick(value)}
       className={cn(
-        "px-4 py-2 text-sm font-medium relative",
-        isActive ? "text-[#334155]" : "text-[#94A3B8]"
+        "flex items-center justify-center",
+        isActive ? "bg-white text-[#334155]" : "text-[#64748B]"
       )}
+      style={{
+        fontFamily: "DM Sans",
+        fontSize: "14px",
+        fontWeight: 500,
+        width: "max-content",
+        minWidth: "124px",
+        padding: "4px 12px",
+        borderRadius: "4px",
+        lineHeight: "1.43",
+      }}
     >
       {label}
-      {isActive && (
-        <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#334155]" />
-      )}
     </button>
   );
 }
@@ -48,8 +55,17 @@ export function ProfileTabs({
   };
 
   return (
-    <div className="w-full border-b border-[#E2E8F0]">
-      <div className="flex space-x-4">
+    <div className="w-full">
+      <div
+        className="flex"
+        style={{
+          backgroundColor: "#F1F5F9",
+          padding: "4px 6px",
+          gap: "8px",
+          borderRadius: "8px",
+          width: "max-content",
+        }}
+      >
         {tabs.map((tab) => (
           <Tab
             key={tab.value}

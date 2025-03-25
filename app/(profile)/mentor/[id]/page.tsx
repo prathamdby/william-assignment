@@ -248,14 +248,12 @@ export default function MentorProfilePage({
       </div>
 
       {/* Services section heading */}
-      <div className="px-[106px] pt-4">
-        <h2 className="text-2xl font-medium text-[#0F172A] font-montserrat">
-          Services
-        </h2>
+      <div className="px-[113px] pt-4 pb-4">
+        <h2 className="text-2xl font-medium text-[#0F172A]">Services</h2>
       </div>
 
       {/* Tabs */}
-      <div className="px-[106px] py-4">
+      <div className="px-[113px] mb-6">
         <ProfileTabs
           tabs={profileTabs}
           defaultTab="all"
@@ -264,7 +262,7 @@ export default function MentorProfilePage({
       </div>
 
       {/* Services content */}
-      <div className="px-[106px] pb-8">
+      <div className="px-[113px] py-6">
         {activeTab === "all" && (
           <div className="flex flex-col gap-8">
             <div className="grid grid-cols-2 gap-8">
