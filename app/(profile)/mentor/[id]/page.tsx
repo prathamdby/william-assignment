@@ -19,6 +19,7 @@ import {
   Twitter,
   FileText,
   ArrowLeft,
+  AlertCircle,
 } from "lucide-react";
 import { ProfileTabs } from "@/components/ProfileTabs";
 import { ServiceCard } from "@/components/ServiceCard";
@@ -104,12 +105,13 @@ const mentorsData: MentorData[] = [
 // Get mentor data with proper typing
 const getMentorData = (
   id: string,
-): (MentorData & { sessions: number }) | null => {
+): (MentorData & { sessions: number; isServicesDisabled?: boolean }) | null => {
   const mentor = mentorsData.find((m) => m.id === parseInt(id));
   if (!mentor) return null;
   return {
     ...mentor,
-    sessions: 20, // Adding sessions since it's not in the original data
+    sessions: 20,
+    isServicesDisabled: parseInt(id) === 2, // Disable services for mentor ID 2
   };
 };
 
@@ -391,143 +393,177 @@ export default function MentorProfilePage({
         <h2 className="text-2xl font-medium text-[#0F172A]">Services</h2>
       </div>
 
-      {/* Tabs */}
-      <div className="px-[113px] mb-6">
-        <ProfileTabs
-          tabs={profileTabs}
-          defaultTab="all"
-          onChange={setActiveTab}
-        />
-      </div>
+      {/* Tabs - Only show if services are not disabled */}
+      {!mentorData.isServicesDisabled && (
+        <div className="px-[113px] mb-6">
+          <ProfileTabs
+            tabs={profileTabs}
+            defaultTab="all"
+            onChange={setActiveTab}
+          />
+        </div>
+      )}
 
       {/* Services content */}
       <div className="px-[113px] py-6 border-b border-[#E2E8F0]">
-        {activeTab === "all" && (
-          <div className="flex flex-col gap-8">
-            <div className="grid grid-cols-2 gap-8">
-              {services.slice(0, 2).map((service) => (
-                <ServiceCard
-                  key={service.id}
-                  title={service.title}
-                  description={service.description}
-                  serviceType={service.serviceType}
-                  duration={service.duration}
-                  date={service.date}
-                  replies={service.replies}
-                  amount={service.amount}
-                />
-              ))}
-            </div>
-            <div className="grid grid-cols-2 gap-8">
-              <div className="flex flex-col gap-8">
-                {services.slice(2, 4).map((service) => (
-                  <ServiceCard
-                    key={service.id}
-                    title={service.title}
-                    description={service.description}
-                    serviceType={service.serviceType}
-                    duration={service.duration}
-                    date={service.date}
-                    replies={service.replies}
-                    amount={service.amount}
+        {mentorData.isServicesDisabled ? (
+          <div className="flex flex-col items-center justify-center py-16">
+            <div className="flex flex-col items-center gap-6">
+              <div className="flex flex-col items-center gap-3">
+                <svg
+                  width="80"
+                  height="80"
+                  viewBox="0 0 81 80"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M36.5 52H44.5V60H36.5V52ZM36.5 20H44.5V44H36.5V20ZM40.46 0C18.38 0 0.5 17.92 0.5 40C0.5 62.08 18.38 80 40.46 80C62.58 80 80.5 62.08 80.5 40C80.5 17.92 62.58 0 40.46 0ZM40.5 72C22.82 72 8.5 57.68 8.5 40C8.5 22.32 22.82 8 40.5 8C58.18 8 72.5 22.32 72.5 40C72.5 57.68 58.18 72 40.5 72Z"
+                    fill="#F59E0B"
                   />
-                ))}
+                </svg>
+                <h3 className="text-[#334155] text-2xl font-bold text-center leading-[1.333] whitespace-pre-line">
+                  {"Temporarily out of\nservice"}
+                </h3>
               </div>
-              <ProductCard
-                title={digitalProduct.title}
-                description={digitalProduct.description}
-                thumbnailContent={digitalProduct.thumbnailContent}
-                amount={digitalProduct.amount}
-              />
+              <Link
+                href="/mentors"
+                className="px-4 py-2 bg-[#334155] text-white text-xs font-semibold rounded-md hover:opacity-90"
+              >
+                Find other mentors
+              </Link>
             </div>
           </div>
-        )}
+        ) : (
+          <>
+            {activeTab === "all" && (
+              <div className="flex flex-col gap-8">
+                <div className="grid grid-cols-2 gap-8">
+                  {services.slice(0, 2).map((service) => (
+                    <ServiceCard
+                      key={service.id}
+                      title={service.title}
+                      description={service.description}
+                      serviceType={service.serviceType}
+                      duration={service.duration}
+                      date={service.date}
+                      replies={service.replies}
+                      amount={service.amount}
+                    />
+                  ))}
+                </div>
+                <div className="grid grid-cols-2 gap-8">
+                  <div className="flex flex-col gap-8">
+                    {services.slice(2, 4).map((service) => (
+                      <ServiceCard
+                        key={service.id}
+                        title={service.title}
+                        description={service.description}
+                        serviceType={service.serviceType}
+                        duration={service.duration}
+                        date={service.date}
+                        replies={service.replies}
+                        amount={service.amount}
+                      />
+                    ))}
+                  </div>
+                  <ProductCard
+                    title={digitalProduct.title}
+                    description={digitalProduct.description}
+                    thumbnailContent={digitalProduct.thumbnailContent}
+                    amount={digitalProduct.amount}
+                  />
+                </div>
+              </div>
+            )}
 
-        {activeTab === "call" && (
-          <div className="grid grid-cols-2 gap-8">
-            {services
-              .filter((service) => service.type === "call")
-              .map((service) => (
-                <ServiceCard
-                  key={service.id}
-                  title={service.title}
-                  description={service.description}
-                  serviceType={service.serviceType}
-                  duration={service.duration}
-                  date={service.date}
-                  replies={service.replies}
-                  amount={service.amount}
+            {activeTab === "call" && (
+              <div className="grid grid-cols-2 gap-8">
+                {services
+                  .filter((service) => service.type === "call")
+                  .map((service) => (
+                    <ServiceCard
+                      key={service.id}
+                      title={service.title}
+                      description={service.description}
+                      serviceType={service.serviceType}
+                      duration={service.duration}
+                      date={service.date}
+                      replies={service.replies}
+                      amount={service.amount}
+                    />
+                  ))}
+              </div>
+            )}
+
+            {activeTab === "dm" && (
+              <div className="grid grid-cols-2 gap-8">
+                {services
+                  .filter((service) => service.type === "dm")
+                  .map((service) => (
+                    <ServiceCard
+                      key={service.id}
+                      title={service.title}
+                      description={service.description}
+                      serviceType={service.serviceType}
+                      duration={service.duration}
+                      date={service.date}
+                      replies={service.replies}
+                      amount={service.amount}
+                    />
+                  ))}
+              </div>
+            )}
+
+            {activeTab === "package" && (
+              <div className="grid grid-cols-2 gap-8">
+                {services
+                  .filter((service) => service.type === "package")
+                  .map((service) => (
+                    <ServiceCard
+                      key={service.id}
+                      title={service.title}
+                      description={service.description}
+                      serviceType={service.serviceType}
+                      duration={service.duration}
+                      date={service.date}
+                      replies={service.replies}
+                      amount={service.amount}
+                    />
+                  ))}
+              </div>
+            )}
+
+            {activeTab === "webinar" && (
+              <div className="grid grid-cols-2 gap-8">
+                {services
+                  .filter((service) => service.type === "webinar")
+                  .map((service) => (
+                    <ServiceCard
+                      key={service.id}
+                      title={service.title}
+                      description={service.description}
+                      serviceType={service.serviceType}
+                      duration={service.duration}
+                      date={service.date}
+                      replies={service.replies}
+                      amount={service.amount}
+                    />
+                  ))}
+              </div>
+            )}
+
+            {activeTab === "product" && (
+              <div className="grid grid-cols-2 gap-8">
+                <ProductCard
+                  title={digitalProduct.title}
+                  description={digitalProduct.description}
+                  thumbnailContent={digitalProduct.thumbnailContent}
+                  amount={digitalProduct.amount}
                 />
-              ))}
-          </div>
-        )}
-
-        {activeTab === "dm" && (
-          <div className="grid grid-cols-2 gap-8">
-            {services
-              .filter((service) => service.type === "dm")
-              .map((service) => (
-                <ServiceCard
-                  key={service.id}
-                  title={service.title}
-                  description={service.description}
-                  serviceType={service.serviceType}
-                  duration={service.duration}
-                  date={service.date}
-                  replies={service.replies}
-                  amount={service.amount}
-                />
-              ))}
-          </div>
-        )}
-
-        {activeTab === "package" && (
-          <div className="grid grid-cols-2 gap-8">
-            {services
-              .filter((service) => service.type === "package")
-              .map((service) => (
-                <ServiceCard
-                  key={service.id}
-                  title={service.title}
-                  description={service.description}
-                  serviceType={service.serviceType}
-                  duration={service.duration}
-                  date={service.date}
-                  replies={service.replies}
-                  amount={service.amount}
-                />
-              ))}
-          </div>
-        )}
-
-        {activeTab === "webinar" && (
-          <div className="grid grid-cols-2 gap-8">
-            {services
-              .filter((service) => service.type === "webinar")
-              .map((service) => (
-                <ServiceCard
-                  key={service.id}
-                  title={service.title}
-                  description={service.description}
-                  serviceType={service.serviceType}
-                  duration={service.duration}
-                  date={service.date}
-                  replies={service.replies}
-                  amount={service.amount}
-                />
-              ))}
-          </div>
-        )}
-
-        {activeTab === "product" && (
-          <div className="grid grid-cols-2 gap-8">
-            <ProductCard
-              title={digitalProduct.title}
-              description={digitalProduct.description}
-              thumbnailContent={digitalProduct.thumbnailContent}
-              amount={digitalProduct.amount}
-            />
-          </div>
+              </div>
+            )}
+          </>
         )}
       </div>
 
