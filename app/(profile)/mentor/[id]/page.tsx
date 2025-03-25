@@ -14,6 +14,11 @@ import {
   IndianRupee,
   PackageIcon,
   Presentation,
+  Linkedin,
+  Instagram,
+  Twitter,
+  FileText,
+  ArrowLeft,
 } from "lucide-react";
 import { ProfileTabs } from "@/components/ProfileTabs";
 import { ServiceCard } from "@/components/ServiceCard";
@@ -171,79 +176,104 @@ export default function MentorProfilePage({
   // const { id } = params;
 
   return (
-    <div className="flex flex-col">
-      {/* Header section */}
-      <div className="flex justify-between items-center py-4 px-8 border-b border-[#E2E8F0]">
-        <Link href="/mentors" className="flex items-center gap-3">
-          <button className="w-8 h-8 flex items-center justify-center rounded-full border border-[#E2E8F0]">
-            <X className="w-4 h-4 text-[#94A3B8]" />
-          </button>
-          <span className="text-sm text-[#64748B]">Back</span>
-        </Link>
-        <button className="w-8 h-8 flex items-center justify-center rounded-full border border-[#E2E8F0]">
-          <Share2 className="w-4 h-4 text-[#94A3B8]" />
-        </button>
-      </div>
-
+    <div className="flex flex-col relative">
+      {/* Back button */}
+      <Link
+        href="/mentors"
+        className="flex items-center gap-2 absolute top-6 left-2"
+      >
+        <ArrowLeft className="w-5 h-5 text-[#94A3B8]" />
+        <span className="text-sm text-[#64748B]">Back</span>
+      </Link>
       {/* Profile section */}
-      <div className="px-8 py-6">
-        <div className="flex gap-6">
-          {/* Profile image */}
-          <div className="w-[120px] h-[120px] relative rounded-full overflow-hidden">
-            <Image
-              src={mentorData.imgSrc}
-              alt={mentorData.name}
-              fill
-              className="object-cover"
-            />
+      <div className="px-[113px] py-6 flex gap-6 mx-auto border-b border-[#E2E8F0]">
+        {/* Profile image and reviews */}
+        <div className="relative w-[184px] h-[184px] rounded-lg overflow-hidden">
+          <Image
+            src={mentorData.imgSrc}
+            alt={mentorData.name}
+            fill
+            className="object-cover"
+          />
+          <div className="absolute bottom-0 left-0 right-0 bg-[rgba(51,65,85,0.4)] px-2 py-1.5 flex items-center gap-1">
+            <div className="flex">
+              {[...Array(5)].map((_, i) => (
+                <Image
+                  key={i}
+                  src="/images/star.svg"
+                  alt="Star"
+                  width={12}
+                  height={12}
+                />
+              ))}
+            </div>
+            <span className="text-xs font-semibold text-white">|</span>
+            <span className="text-xs font-semibold text-white">
+              {mentorData.reviews} Reviews
+            </span>
           </div>
+        </div>
 
-          {/* Profile info */}
-          <div className="flex-1">
+        {/* Profile info */}
+        <div className="flex-1 flex flex-col gap-3">
+          <div className="flex justify-between">
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-2">
-                <h1 className="text-2xl font-semibold text-[#334155]">
+                <h1 className="text-xl font-semibold text-[#334155]">
                   {mentorData.name}
                 </h1>
                 {mentorData.isVerified && (
-                  <BadgeCheckIcon className="w-6 h-6 text-[#00C16A]" />
+                  <BadgeCheckIcon className="w-5 h-5 text-[#00C16A]" />
                 )}
               </div>
               <p className="text-lg text-[#334155]">
                 {mentorData.title} at {mentorData.company}
               </p>
             </div>
-
-            {/* Rating and sessions */}
-            <div className="flex items-center gap-6 mt-4">
-              <div className="flex items-center gap-2">
-                <div className="flex">
-                  {[...Array(5)].map((_, i) => (
-                    <Image
-                      key={i}
-                      src="/images/star.svg"
-                      alt="Star"
-                      width={16}
-                      height={16}
-                    />
-                  ))}
-                </div>
-                <span className="text-sm font-medium text-[#334155]">
-                  {mentorData.reviews} Reviews
-                </span>
+            <div className="flex flex-col items-end gap-4">
+              <div className="px-2 py-1 bg-[#E5E7EB] rounded text-xs font-semibold text-[#0F172A]">
+                {mentorData.sessions} Sessions
               </div>
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-[#334155]">
-                  {mentorData.sessions} Sessions
-                </span>
+              <div className="flex items-center gap-1.5">
+                <Link
+                  href="https://www.linkedin.com"
+                  target="_blank"
+                  className="p-1 hover:opacity-80"
+                >
+                  <Linkedin className="w-5 h-5 text-[#020617] stroke-[1.5]" />
+                </Link>
+                <Link
+                  href="https://www.instagram.com"
+                  target="_blank"
+                  className="p-1 hover:opacity-80"
+                >
+                  <Instagram className="w-5 h-5 text-[#020617] stroke-[1.5]" />
+                </Link>
+                <Link
+                  href="https://medium.com"
+                  target="_blank"
+                  className="p-1 hover:opacity-80"
+                >
+                  <FileText className="w-5 h-5 text-[#020617] stroke-[1.5]" />
+                </Link>
+                <Link
+                  href="https://twitter.com"
+                  target="_blank"
+                  className="p-1 hover:opacity-80"
+                >
+                  <Twitter className="w-5 h-5 text-[#020617] stroke-[1.5]" />
+                </Link>
+                <button className="p-1 hover:opacity-80">
+                  <Share2 className="w-5 h-5 text-[#020617] stroke-[1.5]" />
+                </button>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Bio */}
-        <div className="mt-6 p-4 bg-[#F1F5F9] rounded-md">
-          <p className="text-sm text-[#334155]">{mentorData.bio}</p>
+          {/* Bio */}
+          <div className="p-3 bg-[#F1F5F9] rounded-md">
+            <p className="text-sm text-[#334155]">{mentorData.bio}</p>
+          </div>
         </div>
       </div>
 

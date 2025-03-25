@@ -36,7 +36,7 @@ export function SidebarNav() {
   return (
     <div
       className={cn(
-        "min-h-screen bg-[#F8FAFC]",
+        "min-h-screen bg-[#F8FAFC] border-r border-[#E2E8F0]",
         isProfilePage ? "w-[84px]" : "w-[165px]",
       )}
     >
