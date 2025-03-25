@@ -37,14 +37,14 @@ export function SidebarNav() {
     <div
       className={cn(
         "min-h-screen bg-[#F8FAFC]",
-        isProfilePage ? "w-[84px]" : "w-[165px]"
+        isProfilePage ? "w-[84px]" : "w-[165px]",
       )}
     >
       <div className="pt-[87px]">
         <nav
           className={cn(
             "flex flex-col",
-            isProfilePage ? "px-[20px] space-y-3" : "px-4 space-y-3"
+            isProfilePage ? "px-[20px] space-y-3" : "px-4 space-y-3",
           )}
         >
           {navItems.map((item, index) => {
@@ -73,14 +73,14 @@ export function SidebarNav() {
                         "justify-center items-center",
                         isActive
                           ? "bg-[#E2E8F0] w-[44px] h-[44px] rounded-md"
-                          : "w-[44px] h-[44px]"
+                          : "w-[44px] h-[44px]",
                       )
                     : cn(
                         "px-3 py-2 h-[32px] items-center gap-2 rounded-md",
                         isActive
                           ? "bg-[#E2E8F0] text-[#0F172A]"
-                          : "text-[#94A3B8] hover:text-[#0F172A]"
-                      )
+                          : "text-[#94A3B8] hover:text-[#0F172A]",
+                      ),
                 )}
               >
                 <Image

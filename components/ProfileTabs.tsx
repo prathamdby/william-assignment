@@ -16,7 +16,7 @@ function Tab({ label, value, isActive, onClick }: TabProps) {
       onClick={() => onClick(value)}
       className={cn(
         "flex items-center justify-center",
-        isActive ? "bg-white text-[#334155]" : "text-[#64748B]"
+        isActive ? "bg-white text-[#334155]" : "text-[#64748B]",
       )}
       style={{
         fontFamily: "DM Sans",
