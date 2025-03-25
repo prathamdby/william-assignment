@@ -164,6 +164,20 @@ const services = [
     serviceType: {
       icon: <PackageIcon className="w-4 h-4 text-[#3B82F6]" />,
       label: "Package",
+      details: [
+        {
+          icon: <Video className="w-4 h-4 text-[#3B82F6]" />,
+          label: "2 X 1:1 call - Career guidance",
+        },
+        {
+          icon: <MessageSquare className="w-4 h-4 text-[#3B82F6]" />,
+          label: "1 X Priority Dm - Resume review",
+        },
+        {
+          icon: <Presentation className="w-4 h-4 text-[#3B82F6]" />,
+          label: "1 X Webinar - Interview tips and tricks",
+        },
+      ],
     },
     duration: {
       icon: <Clock className="w-4 h-4 text-[#3B82F6]" />,
