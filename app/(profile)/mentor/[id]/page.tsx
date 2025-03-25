@@ -25,19 +25,92 @@ import { ServiceCard } from "@/components/ServiceCard";
 import { ProductCard } from "@/components/ProductCard";
 import { ReviewCard } from "@/components/ReviewCard";
 
-// Sample data for mentor profile
-const mentorData = {
-  id: 1,
-  name: "Jonny Rose",
-  title: "Sr. Software Engineering",
-  company: "Google",
-  bio: "PM @Bytespectrum || xCloud @Google || xML summer @Amazon || DSA || Team Developement || Growth Management || Full Stack Developer(MERN) || Full Stack Developer(MERN)|| Growth Management || || Growth Management || Full Stack Developer",
-  imgSrc:
-    "https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=256&q=80",
-  isVerified: true,
-  reviews: 3,
-  rating: 5,
-  sessions: 20,
+interface MentorData {
+  id: number;
+  name: string;
+  title: string;
+  company: string;
+  bio: string;
+  imgSrc: string;
+  isVerified: boolean;
+  reviews: number;
+  role: string;
+  companyType: string;
+  availability: string;
+  rating: number;
+  sessions?: number;
+}
+
+// Sample mentor data from mentors page
+const mentorsData: MentorData[] = [
+  {
+    id: 1,
+    name: "Jonny Rose",
+    title: "Sr. Software Engineering",
+    company: "Google",
+    bio: "PM @Bytespectrum || xCloud @Google || xML summer @Amazon || DSA || Team Developement || Growth Management || Full Stack Developer(MERN) || Full Stack Developer(MERN)|| Growth Management || || Growth Management || Full Stack Developer",
+    imgSrc: "/images/jonny_rose.jpg",
+    isVerified: true,
+    reviews: 3,
+    role: "se-sde",
+    companyType: "faang",
+    availability: "next-week",
+    rating: 5,
+  },
+  {
+    id: 2,
+    name: "Dev Jain",
+    title: "Sr. Software Engineering",
+    company: "Microsoft",
+    bio: "PM @Bytespectrum || xCloud @Google || xML summer @Amazon || DSA || Team Developement || Growth Management || Full Stack Developer(MERN)",
+    imgSrc: "/images/dev_jain.jpg",
+    isVerified: true,
+    reviews: 3,
+    role: "se-sde",
+    companyType: "faang",
+    availability: "this-week",
+    rating: 4.8,
+  },
+  {
+    id: 3,
+    name: "Rishi Mehta",
+    title: "Sr. Software Engineering",
+    company: "JP Morgan",
+    bio: "Prev Application Engineer @Google",
+    imgSrc: "/images/rishi_mehta.jpg",
+    isVerified: true,
+    reviews: 3,
+    role: "se-sde",
+    companyType: "mncs",
+    availability: "anytime",
+    rating: 4.5,
+  },
+  {
+    id: 4,
+    name: "Heet Mistry",
+    title: "Sr. Software Engineering",
+    company: "Zomato",
+    bio: "PM @Bytespectrum || xCloud @Google || xML summer @Amazon || DSA || Team Development",
+    imgSrc: "/images/heet_mistry.jpg",
+    isVerified: false,
+    reviews: 3,
+    role: "ds-ai-ml",
+    companyType: "startups",
+    availability: "next-week",
+    rating: 4.2,
+  },
+];
+
+// Get mentor data with proper typing
+const getMentorData = (
+  id: string,
+): (MentorData & { sessions: number }) | null => {
+  const mentor = mentorsData.find((m) => m.id === parseInt(id));
+  if (!mentor) return null;
+  return {
+    ...mentor,
+    sessions: 20, // Adding sessions since it's not in the original data
+  };
 };
 
 const profileTabs = [
@@ -171,9 +244,15 @@ export default function MentorProfilePage({
   params: { id: string };
 }) {
   const [activeTab, setActiveTab] = useState("all");
+  const mentorData = getMentorData(params.id);
 
-  // In a real app, you would fetch the mentor data using the ID
-  // const { id } = params;
+  if (!mentorData) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-lg text-gray-600">Mentor not found</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col relative">
@@ -186,7 +265,7 @@ export default function MentorProfilePage({
         <span className="text-sm text-[#64748B]">Back</span>
       </Link>
       {/* Profile section */}
-      <div className="px-[113px] py-6 flex gap-6 mx-auto border-b border-[#E2E8F0]">
+      <div className="px-[113px] py-6 flex justify-center items-start gap-6 mx-auto border-b border-[#E2E8F0]">
         {/* Profile image and reviews */}
         <div className="relative w-[184px] h-[184px] rounded-lg overflow-hidden">
           <Image
@@ -271,7 +350,7 @@ export default function MentorProfilePage({
           </div>
 
           {/* Bio */}
-          <div className="p-3 bg-[#F1F5F9] rounded-md">
+          <div className="p-3 bg-[#F1F5F9] w-[1387px] rounded-md">
             <p className="text-sm text-[#334155]">{mentorData.bio}</p>
           </div>
         </div>
