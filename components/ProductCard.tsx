@@ -1,6 +1,7 @@
 "use client";
 
 import { Package, IndianRupee } from "lucide-react";
+import Link from "next/link";
 
 interface ProductCardProps {
   title: string;
@@ -10,6 +11,8 @@ interface ProductCardProps {
     description: string;
   };
   amount: string;
+  id?: number;
+  mentorId?: string;
 }
 
 export function ProductCard({
@@ -17,6 +20,8 @@ export function ProductCard({
   description,
   thumbnailContent,
   amount,
+  id = 6, // Default ID for the digital product
+  mentorId = "1", // Default mentor ID
 }: ProductCardProps) {
   return (
     <div className="w-full rounded-xl border border-[#CBD5E1] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.05)] bg-white p-6">
@@ -37,11 +42,14 @@ export function ProductCard({
         <h3 className="font-dm-sans text-[20px] font-semibold text-[#334155] leading-[28px]">
           {title}
         </h3>
-        <button className="h-8 px-3 py-1.5 flex items-center justify-center rounded-[6px] border border-[#334155] bg-[#334155]">
+        <Link
+          href={`/mentor/${mentorId}/service/${id}`}
+          className="h-8 px-3 py-1.5 flex items-center justify-center rounded-[6px] border border-[#334155] bg-[#334155]"
+        >
           <span className="font-dm-sans text-[12px] font-semibold text-white leading-none">
             View Details
           </span>
-        </button>
+        </Link>
       </div>
 
       {/* Description */}

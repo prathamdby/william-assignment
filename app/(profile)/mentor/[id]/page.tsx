@@ -222,7 +222,7 @@ const services = [
 
 // Digital product
 const digitalProduct = {
-  id: 5,
+  id: 6,
   title: "SQL Basics Cheat Sheet",
   description: "To strengthen your SQL and data skills",
   thumbnailContent: {
@@ -476,6 +476,8 @@ export default function MentorProfilePage({
                     description={digitalProduct.description}
                     thumbnailContent={digitalProduct.thumbnailContent}
                     amount={digitalProduct.amount}
+                    id={digitalProduct.id}
+                    mentorId={params.id}
                   />
                 </div>
               </div>
@@ -572,6 +574,8 @@ export default function MentorProfilePage({
                   description={digitalProduct.description}
                   thumbnailContent={digitalProduct.thumbnailContent}
                   amount={digitalProduct.amount}
+                  id={digitalProduct.id}
+                  mentorId={params.id}
                 />
               </div>
             )}
