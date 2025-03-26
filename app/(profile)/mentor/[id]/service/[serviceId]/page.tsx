@@ -475,31 +475,31 @@ export default function ServiceDetailsPage({
           {/* Back button - positioned absolutely to maintain position */}
           <Link
             href={`/mentor/${params.id}`}
-            className="absolute top-6 left-2 flex items-center gap-2 text-sm"
+            className="absolute top-6 left-4 flex items-center gap-2 text-sm sm:left-2"
           >
             <ArrowLeft className="w-5 h-5 text-[#94A3B8]" />
             <span className="text-[#64748B]">Back</span>
           </Link>
 
-          <div className="px-[113px]">
+          <div className="px-4 md:px-6 lg:px-[113px]">
             {/* Mentor name with verification icon - aligned in the same line as back button */}
-            <div className="flex items-center gap-2">
-              <h1 className="text-xl -mt-1 font-semibold text-[#0F172A]">
+            <div className="flex items-center gap-2 mt-8 sm:mt-0">
+              <h1 className="text-xl font-semibold text-[#0F172A]">
                 {mentorData.name}
               </h1>
               {mentorData.isVerified && (
-                <ShieldCheck className="w-5 h-5 text-[#00C16A]" />
+                <ShieldCheck className="w-5 h-5 text-[#00C16A] shrink-0" />
               )}
             </div>
 
             {/* Service Card */}
-            <div className="mt-6 w-full rounded-xl border border-[#CBD5E1] shadow-[0_4px_6px_0_rgba(0,0,0,0.05)] p-6">
+            <div className="mt-6 w-full rounded-xl border border-[#CBD5E1] shadow-[0_4px_6px_0_rgba(0,0,0,0.05)] p-4 sm:p-6">
               {isProductService(service) ? (
                 <div>
                   {/* Thumbnail for digital product */}
-                  <div className="mb-4 rounded-lg overflow-hidden bg-[#05192D] h-56 flex flex-col justify-center">
-                    <div className="p-6">
-                      <h3 className="text-[24px] font-semibold text-[#03EF62] leading-[32px]">
+                  <div className="mb-4 rounded-lg overflow-hidden bg-[#05192D] h-40 sm:h-56 flex flex-col justify-center">
+                    <div className="p-4 sm:p-6">
+                      <h3 className="text-xl sm:text-[24px] font-semibold text-[#03EF62] leading-[1.4]">
                         {service.thumbnailContent.title}
                       </h3>
                       <p className="text-[18px] font-semibold text-white leading-[28px] mt-2">
@@ -535,8 +535,8 @@ export default function ServiceDetailsPage({
                   </div>
 
                   {/* Service details */}
-                  <div className="mt-6 flex items-center gap-2">
-                    <div className="flex-1 bg-[#EEF2FF] rounded p-3">
+                  <div className="mt-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-4 sm:gap-2">
+                    <div className="w-full sm:flex-1 bg-[#EEF2FF] rounded p-3">
                       <div className="flex flex-col gap-2">
                         <p className="text-sm text-[#64748B] font-medium">
                           Service type
@@ -550,7 +550,7 @@ export default function ServiceDetailsPage({
                       </div>
                     </div>
 
-                    <div className="h-full border-r border-[#E2E8F0]"></div>
+                    <div className="hidden sm:block h-full border-r border-[#E2E8F0]"></div>
 
                     <div className="flex-1 bg-[#EEF2FF] rounded p-3">
                       <div className="flex flex-col gap-2">
@@ -596,8 +596,8 @@ export default function ServiceDetailsPage({
                   </div>
 
                   {/* Service details */}
-                  <div className="mt-6 flex items-center gap-2">
-                    <div className="flex-1 bg-[#F9FAFB] rounded p-3">
+                  <div className="mt-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-4 sm:gap-2">
+                    <div className="w-full sm:flex-1 bg-[#F9FAFB] rounded p-3">
                       <div className="flex flex-col gap-2">
                         <p className="text-sm text-[#64748B] font-medium">
                           Service type
@@ -611,10 +611,10 @@ export default function ServiceDetailsPage({
                       </div>
                     </div>
 
-                    <div className="h-full border-r border-[#E2E8F0]"></div>
+                    <div className="hidden sm:block h-full border-r border-[#E2E8F0]"></div>
 
                     {(isCallService(service) || isPackageService(service)) && (
-                      <div className="flex-1 bg-[#F9FAFB] rounded p-3">
+                      <div className="w-full sm:flex-1 bg-[#F9FAFB] rounded p-3">
                         <div className="flex flex-col gap-2">
                           <p className="text-sm text-[#64748B] font-medium">
                             Duration
@@ -630,7 +630,7 @@ export default function ServiceDetailsPage({
                     )}
 
                     {isWebinarService(service) && (
-                      <div className="flex-1 bg-[#F9FAFB] rounded p-3">
+                      <div className="w-full sm:flex-1 bg-[#F9FAFB] rounded p-3">
                         <div className="flex flex-col gap-2">
                           <p className="text-sm text-[#64748B] font-medium">
                             Date
@@ -646,7 +646,7 @@ export default function ServiceDetailsPage({
                     )}
 
                     {isDMService(service) && (
-                      <div className="flex-1 bg-[#F9FAFB] rounded p-3">
+                      <div className="w-full sm:flex-1 bg-[#F9FAFB] rounded p-3">
                         <div className="flex flex-col gap-2">
                           <p className="text-sm text-[#64748B] font-medium">
                             Replies
@@ -685,7 +685,7 @@ export default function ServiceDetailsPage({
       </div>
 
       {/* Slot section - Show for all service types */}
-      <div className="px-[113px] py-6 pb-12">
+      <div className="px-4 md:px-6 lg:px-[113px] py-6 pb-12">
         <h2 className="text-2xl font-medium text-[#0F172A] mb-8">
           {isDMService(service) ? "Your question" : "Slot"}
         </h2>
@@ -693,18 +693,20 @@ export default function ServiceDetailsPage({
         {isDMService(service) ? (
           <>
             {/* Text editor for Priority DM using RichTextEditor component */}
-            <RichTextEditor
-              placeholder="Ask your question"
-              onChange={(content) => setQuestionContent(content)}
-              className="mb-6"
-            />
+            <div className="w-full rounded-xl border border-[#CBD5E1] shadow-[0_4px_6px_0_rgba(0,0,0,0.05)] mb-6">
+              <RichTextEditor
+                placeholder="Ask your question"
+                onChange={(content) => setQuestionContent(content)}
+                className="w-full px-6 py-4"
+              />
+            </div>
 
             {/* Next button - positioned exactly as in Figma */}
             <div className="flex justify-end">
               <button
                 onClick={handleQuestionSubmit}
                 disabled={!hasQuestionContent()}
-                className={`px-10 py-2 text-sm font-semibold rounded-md ${
+                className={`w-full sm:w-auto px-10 py-2 text-sm font-semibold rounded-md ${
                   hasQuestionContent()
                     ? "bg-[#334155] text-white"
                     : "bg-[#E2E8F0] text-[#94A3B8]"
@@ -716,7 +718,7 @@ export default function ServiceDetailsPage({
           </>
         ) : (
           <div className="w-full rounded-xl border border-[#CBD5E1] shadow-[0_4px_6px_0_rgba(0,0,0,0.05)] p-6">
-            <div className="grid grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-8">
               {/* Date picker */}
               <div>
                 <div className="flex items-center gap-2 mb-2">
@@ -747,7 +749,7 @@ export default function ServiceDetailsPage({
                       {formatDate(selectedDate)}
                     </span>
                   </div>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 xs:grid-cols-2 gap-3">
                     {timeSlots.map((time, index) => {
                       const isSelected = selectedTimeSlot === time;
                       const isFirst = time === "6:00 - 6:30PM";
@@ -793,7 +795,7 @@ export default function ServiceDetailsPage({
                 </button>
 
                 {isTimezoneDropdownOpen && (
-                  <div className="absolute z-10 mt-1 w-full bg-white border border-[#CBD5E1] rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                  <div className="absolute z-10 mt-1 w-full bg-white border border-[#CBD5E1] rounded-lg shadow-lg max-h-[50vh] sm:max-h-60 overflow-y-auto">
                     {timezones.map((timezone, index) => (
                       <button
                         key={index}
@@ -816,8 +818,8 @@ export default function ServiceDetailsPage({
             </div>
 
             {/* Confirm button */}
-            <div className="mt-6 flex justify-end">
-              <button className="px-4 py-2 text-white text-sm font-semibold rounded-md bg-[#334155] hover:opacity-90">
+            <div className="mt-6 flex justify-end px-4 sm:px-0">
+              <button className="w-full sm:w-auto px-4 py-2 text-white text-sm font-semibold rounded-md bg-[#334155] hover:opacity-90">
                 {isProductService(service) ? "Get Now" : "Confirm details"}
               </button>
             </div>
