@@ -27,8 +27,14 @@ import {
   Smile as SmileIcon,
   AlignLeft,
   Trash2,
+  MoreVertical,
 } from "lucide-react";
 import { UploadErrorToast } from "./ui/upload-error-toast";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 // Define the type for heading levels
 type Level = 1 | 2 | 3 | 4 | 5 | 6;
@@ -48,6 +54,7 @@ const RichTextEditor = ({
 }: RichTextEditorProps) => {
   const [showHeadingDropdown, setShowHeadingDropdown] = useState(false);
   const [currentHeadingLevel, setCurrentHeadingLevel] = useState<Level>(1);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isFocused, setIsFocused] = useState(false);
   const [uploadedImage, setUploadedImage] = useState<{
@@ -582,6 +589,76 @@ const RichTextEditor = ({
     document.addEventListener("mousedown", closeOnClickOutside);
   };
 
+  // Toolbar buttons configuration for reusability
+  const toolbarButtons = [
+    {
+      icon: <BoldIcon className="w-5 h-5" />,
+      action: () => editor.chain().focus().toggleBold().run(),
+      isActive: editor.isActive("bold"),
+      title: "Bold",
+    },
+    {
+      icon: <ItalicIcon className="w-5 h-5" />,
+      action: () => editor.chain().focus().toggleItalic().run(),
+      isActive: editor.isActive("italic"),
+      title: "Italic",
+    },
+    {
+      icon: <UnderlineIcon className="w-5 h-5" />,
+      action: () => editor.chain().focus().toggleUnderline().run(),
+      isActive: editor.isActive("underline"),
+      title: "Underline",
+    },
+    {
+      icon: <StrikethroughIcon className="w-5 h-5" />,
+      action: () => editor.chain().focus().toggleStrike().run(),
+      isActive: editor.isActive("strike"),
+      title: "Strikethrough",
+    },
+    {
+      icon: <AlignLeft className="w-5 h-5" />,
+      action: () => editor.chain().focus().setParagraph().run(),
+      isActive: editor.isActive("paragraph"),
+      title: "Paragraph",
+    },
+    {
+      icon: <ListIcon className="w-5 h-5" />,
+      action: () => editor.chain().focus().toggleBulletList().run(),
+      isActive: editor.isActive("bulletList"),
+      title: "Bullet List",
+    },
+    {
+      icon: <ListOrderedIcon className="w-5 h-5" />,
+      action: () => editor.chain().focus().toggleOrderedList().run(),
+      isActive: editor.isActive("orderedList"),
+      title: "Numbered List",
+    },
+    {
+      icon: <LinkIcon className="w-5 h-5" />,
+      action: handleLinkInsert,
+      isActive: editor.isActive("link"),
+      title: "Insert Link",
+    },
+    {
+      icon: <ImageIcon className="w-5 h-5" />,
+      action: handleImageInsert,
+      isActive: editor.isActive("image"),
+      title: "Insert Image",
+    },
+    {
+      icon: <VideoIcon className="w-5 h-5" />,
+      action: handleVideoInsert,
+      isActive: false,
+      title: "Insert Video",
+    },
+    {
+      icon: <SmileIcon className="w-5 h-5" />,
+      action: handleEmojiInsert,
+      isActive: false,
+      title: "Insert Emoji",
+    },
+  ];
+
   return (
     <div
       className={`w-full rounded-md border ${
@@ -596,17 +673,16 @@ const RichTextEditor = ({
         onHide={() => setShowUploadFailToast(false)}
       />
 
-      {/* Text formatting toolbar - exact match to Figma design */}
-      <div className="flex items-center px-6 py-3 border-b border-[#E2E8F0]">
-        {/* All formatting options in a single row with equal spacing */}
+      {/* Text formatting toolbar - responsive design */}
+      <div className="flex items-center px-3 sm:px-6 py-3 border-b border-[#E2E8F0]">
         <div className="flex items-center w-full justify-between">
           {/* Heading selector */}
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setShowHeadingDropdown(!showHeadingDropdown)}
-              className="flex items-center gap-8"
+              className="flex items-center gap-2 sm:gap-8"
             >
-              <span className="text-base font-semibold text-[#64748B]">
+              <span className="text-sm sm:text-base font-semibold text-[#64748B]">
                 {getHeadingText()}
               </span>
               <ChevronDown className="w-4 h-4 text-[#CBD5E1] cursor-pointer" />
@@ -630,115 +706,54 @@ const RichTextEditor = ({
             )}
           </div>
 
-          {/* Formatting buttons with equal spacing */}
-          <button
-            onClick={() => editor.chain().focus().toggleBold().run()}
-            className={`p-1 ${
-              editor.isActive("bold") ? "text-[#334155]" : "text-[#64748B]"
-            } hover:text-[#334155]`}
-            title="Bold"
-          >
-            <BoldIcon className="w-5 h-5" />
-          </button>
-          <button
-            onClick={() => editor.chain().focus().toggleItalic().run()}
-            className={`p-1 ${
-              editor.isActive("italic") ? "text-[#334155]" : "text-[#64748B]"
-            } hover:text-[#334155]`}
-            title="Italic"
-          >
-            <ItalicIcon className="w-5 h-5" />
-          </button>
-          <button
-            onClick={() => editor.chain().focus().toggleUnderline().run()}
-            className={`p-1 ${
-              editor.isActive("underline") ? "text-[#334155]" : "text-[#64748B]"
-            } hover:text-[#334155]`}
-            title="Underline"
-          >
-            <UnderlineIcon className="w-5 h-5" />
-          </button>
-          <button
-            onClick={() => editor.chain().focus().toggleStrike().run()}
-            className={`p-1 ${
-              editor.isActive("strike") ? "text-[#334155]" : "text-[#64748B]"
-            } hover:text-[#334155]`}
-            title="Strikethrough"
-          >
-            <StrikethroughIcon className="w-5 h-5" />
-          </button>
-          <button
-            onClick={() => editor.chain().focus().setParagraph().run()}
-            className={`p-1 ${
-              editor.isActive("paragraph") ? "text-[#334155]" : "text-[#64748B]"
-            } hover:text-[#334155]`}
-            title="Paragraph"
-          >
-            <AlignLeft className="w-5 h-5" />
-          </button>
+          {/* Desktop toolbar buttons */}
+          <div className="hidden sm:flex items-center justify-between flex-1 ml-4">
+            {toolbarButtons.map((button, index) => (
+              <button
+                key={index}
+                onClick={button.action}
+                className={`p-1 ${
+                  button.isActive ? "text-[#334155]" : "text-[#64748B]"
+                } hover:text-[#334155]`}
+                title={button.title}
+              >
+                {button.icon}
+              </button>
+            ))}
+          </div>
 
-          {/* List options with equal spacing */}
-          <button
-            onClick={() => editor.chain().focus().toggleBulletList().run()}
-            className={`p-1 ${
-              editor.isActive("bulletList")
-                ? "text-[#334155]"
-                : "text-[#64748B]"
-            } hover:text-[#334155]`}
-            title="Bullet List"
-          >
-            <ListIcon className="w-5 h-5" />
-          </button>
-          <button
-            onClick={() => editor.chain().focus().toggleOrderedList().run()}
-            className={`p-1 ${
-              editor.isActive("orderedList")
-                ? "text-[#334155]"
-                : "text-[#64748B]"
-            } hover:text-[#334155]`}
-            title="Numbered List"
-          >
-            <ListOrderedIcon className="w-5 h-5" />
-          </button>
-
-          {/* Insert options with equal spacing */}
-          <button
-            onClick={handleLinkInsert}
-            className={`p-1 ${
-              editor.isActive("link") ? "text-[#334155]" : "text-[#64748B]"
-            } hover:text-[#334155]`}
-            title="Insert Link"
-          >
-            <LinkIcon className="w-5 h-5" />
-          </button>
-          <button
-            onClick={handleImageInsert}
-            className={`p-1 ${
-              editor.isActive("image") ? "text-[#334155]" : "text-[#64748B]"
-            } hover:text-[#334155]`}
-            title="Insert Image"
-          >
-            <ImageIcon className="w-5 h-5" />
-          </button>
-          <button
-            onClick={handleVideoInsert}
-            className="p-1 text-[#64748B] hover:text-[#334155]"
-            title="Insert Video"
-          >
-            <VideoIcon className="w-5 h-5" />
-          </button>
-          <button
-            onClick={handleEmojiInsert}
-            className="p-1 text-[#64748B] hover:text-[#334155]"
-            title="Insert Emoji"
-          >
-            <SmileIcon className="w-5 h-5" />
-          </button>
+          {/* Mobile toolbar popover */}
+          <div className="sm:hidden">
+            <Popover>
+              <PopoverTrigger asChild>
+                <button className="p-2 text-[#64748B] hover:text-[#334155]">
+                  <MoreVertical className="w-5 h-5" />
+                </button>
+              </PopoverTrigger>
+              <PopoverContent className="w-56 p-2 grid grid-cols-4 gap-1">
+                {toolbarButtons.map((button, index) => (
+                  <button
+                    key={index}
+                    onClick={() => {
+                      button.action();
+                      setShowMobileMenu(false);
+                    }}
+                    className={`p-2 rounded hover:bg-slate-100 ${
+                      button.isActive ? "text-[#334155]" : "text-[#64748B]"
+                    }`}
+                    title={button.title}
+                  >
+                    {button.icon}
+                  </button>
+                ))}
+              </PopoverContent>
+            </Popover>
+          </div>
         </div>
       </div>
 
       {/* Editor content area */}
-      <div className="w-full min-h-[272px] px-6 py-4">
+      <div className="w-full min-h-[272px] px-3 sm:px-6 py-4">
         <EditorContent
           editor={editor}
           className="outline-none w-full h-full min-h-[240px] text-slate-700 text-[16px] leading-[20px] font-['DM_Sans']"
@@ -747,11 +762,11 @@ const RichTextEditor = ({
 
       {/* Display uploaded images below the editor */}
       {uploadedImages.length > 0 && (
-        <div className="px-6 pb-4 flex flex-wrap gap-4">
+        <div className="px-3 sm:px-6 pb-4 flex flex-col sm:flex-wrap sm:flex-row gap-4">
           {uploadedImages.map((image, index) => (
             <div
               key={index}
-              className="bg-[#F1F5F9] border border-[#CBD5E1] rounded-md p-3 w-[438px] h-[177px] relative overflow-hidden"
+              className="bg-[#F1F5F9] border border-[#CBD5E1] rounded-md p-3 w-full sm:w-[438px] h-[177px] relative overflow-hidden"
             >
               <div className="flex justify-between items-start">
                 <div className="flex items-center gap-2">
@@ -769,7 +784,7 @@ const RichTextEditor = ({
                       />
                     </svg>
                   </div>
-                  <span className="text-[#334155] text-[14px] font-semibold font-['DM Sans'] truncate max-w-[320px]">
+                  <span className="text-[#334155] text-[14px] font-semibold font-['DM Sans'] truncate max-w-[200px] sm:max-w-[320px]">
                     {image.name.length > 35
                       ? image.name.substring(0, 32) + "..."
                       : image.name}
@@ -789,11 +804,11 @@ const RichTextEditor = ({
                   />
                 </button>
               </div>
-              <div className="absolute left-[44px] top-[40px]">
+              <div className="absolute left-[44px] top-[40px] w-[calc(100%-88px)] sm:w-auto">
                 <img
                   src={image.url}
                   alt={image.name}
-                  className="max-w-[350px] max-h-[120px] object-contain bg-white p-1 rounded border border-[#E2E8F0]"
+                  className="max-w-full sm:max-w-[350px] max-h-[120px] object-contain bg-white p-1 rounded border border-[#E2E8F0]"
                 />
               </div>
             </div>
