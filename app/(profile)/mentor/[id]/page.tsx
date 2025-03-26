@@ -104,7 +104,7 @@ const mentorsData: MentorData[] = [
 
 // Get mentor data with proper typing
 const getMentorData = (
-  id: string
+  id: string,
 ): (MentorData & { sessions: number; isServicesDisabled?: boolean }) | null => {
   const mentor = mentorsData.find((m) => m.id === parseInt(id));
   if (!mentor) return null;

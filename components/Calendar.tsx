@@ -14,13 +14,13 @@ export function Calendar({ selectedDate, onDateSelect }: CalendarProps) {
   const daysInMonth = new Date(
     currentDate.getFullYear(),
     currentDate.getMonth() + 1,
-    0
+    0,
   ).getDate();
 
   const firstDayOfMonth = new Date(
     currentDate.getFullYear(),
     currentDate.getMonth(),
-    1
+    1,
   ).getDay();
 
   const monthNames = [
@@ -40,13 +40,13 @@ export function Calendar({ selectedDate, onDateSelect }: CalendarProps) {
 
   const goToPreviousMonth = () => {
     setCurrentDate(
-      new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1)
+      new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1),
     );
   };
 
   const goToNextMonth = () => {
     setCurrentDate(
-      new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1)
+      new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1),
     );
   };
 
@@ -68,23 +68,25 @@ export function Calendar({ selectedDate, onDateSelect }: CalendarProps) {
   };
 
   return (
-    <div className="p-4 border border-[#E2E8F0] rounded-lg">
+    <div className="p-4 border border-[#E2E8F0] rounded-lg bg-[#F8FAFC]">
       <div className="flex items-center justify-between mb-4">
-        <button
-          onClick={goToPreviousMonth}
-          className="p-1 hover:bg-gray-100 rounded"
-        >
-          <ChevronLeft className="w-4 h-4 text-[#64748B]" />
-        </button>
-        <span className="text-sm font-medium text-[#334155]">
+        <span className="text-sm font-medium text-[#0F172A]">
           {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
         </span>
-        <button
-          onClick={goToNextMonth}
-          className="p-1 hover:bg-gray-100 rounded"
-        >
-          <ChevronRight className="w-4 h-4 text-[#64748B]" />
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={goToPreviousMonth}
+            className="p-1 hover:bg-gray-200 rounded"
+          >
+            <ChevronLeft className="w-4 h-4 text-[#64748B]" />
+          </button>
+          <button
+            onClick={goToNextMonth}
+            className="p-1 hover:bg-gray-200 rounded"
+          >
+            <ChevronRight className="w-4 h-4 text-[#0F172A]" />
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-7 gap-1">
@@ -102,7 +104,7 @@ export function Calendar({ selectedDate, onDateSelect }: CalendarProps) {
           const date = new Date(
             currentDate.getFullYear(),
             currentDate.getMonth(),
-            index + 1
+            index + 1,
           );
           const isSelected = isSelectedDate(date);
           const isTodayDate = isToday(date);
@@ -115,8 +117,8 @@ export function Calendar({ selectedDate, onDateSelect }: CalendarProps) {
                 isSelected
                   ? "bg-[#334155] text-white"
                   : isTodayDate
-                  ? "bg-[#EEF2FF] text-[#334155]"
-                  : "text-[#334155] hover:bg-[#F8FAFC]"
+                    ? "bg-[#F1F5F9] text-[#334155]"
+                    : "text-[#334155] hover:bg-[#F1F5F9]"
               }`}
             >
               {index + 1}
