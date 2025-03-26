@@ -16,6 +16,95 @@ import {
 } from "lucide-react";
 import { Calendar as CalendarComponent } from "@/components/Calendar";
 
+// Mentor data interface
+interface MentorData {
+  id: number;
+  name: string;
+  title: string;
+  company: string;
+  bio: string;
+  imgSrc: string;
+  isVerified: boolean;
+  reviews: number;
+  role: string;
+  companyType: string;
+  availability: string;
+  rating: number;
+}
+
+// Sample mentor data from mentors page
+const mentorsData: MentorData[] = [
+  {
+    id: 1,
+    name: "Jonny Rose",
+    title: "Sr. Software Engineering",
+    company: "Google",
+    bio: "PM @Bytespectrum || xCloud @Google || xML summer @Amazon || DSA || Team Developement || Growth Management || Full Stack Developer(MERN) || Full Stack Developer(MERN)|| Growth Management || || Growth Management || Full Stack Developer",
+    imgSrc: "/images/jonny_rose.jpg",
+    isVerified: true,
+    reviews: 3,
+    role: "se-sde",
+    companyType: "faang",
+    availability: "next-week",
+    rating: 5,
+  },
+  {
+    id: 2,
+    name: "Dev Jain",
+    title: "Sr. Software Engineering",
+    company: "Microsoft",
+    bio: "PM @Bytespectrum || xCloud @Google || xML summer @Amazon || DSA || Team Developement || Growth Management || Full Stack Developer(MERN)",
+    imgSrc: "/images/dev_jain.jpg",
+    isVerified: true,
+    reviews: 3,
+    role: "se-sde",
+    companyType: "faang",
+    availability: "this-week",
+    rating: 4.8,
+  },
+  {
+    id: 3,
+    name: "Rishi Mehta",
+    title: "Sr. Software Engineering",
+    company: "JP Morgan",
+    bio: "Prev Application Engineer @Google",
+    imgSrc: "/images/rishi_mehta.jpg",
+    isVerified: true,
+    reviews: 3,
+    role: "se-sde",
+    companyType: "mncs",
+    availability: "anytime",
+    rating: 4.5,
+  },
+  {
+    id: 4,
+    name: "Heet Mistry",
+    title: "Sr. Software Engineering",
+    company: "Zomato",
+    bio: "PM @Bytespectrum || xCloud @Google || xML summer @Amazon || DSA || Team Development",
+    imgSrc: "/images/heet_mistry.jpg",
+    isVerified: false,
+    reviews: 3,
+    role: "ds-ai-ml",
+    companyType: "startups",
+    availability: "next-week",
+    rating: 4.2,
+  },
+];
+
+// Get mentor data with proper typing
+const getMentorData = (
+  id: string,
+): (MentorData & { sessions: number; isServicesDisabled?: boolean }) | null => {
+  const mentor = mentorsData.find((m) => m.id === parseInt(id));
+  if (!mentor) return null;
+  return {
+    ...mentor,
+    sessions: 20,
+    isServicesDisabled: parseInt(id) === 2, // Disable services for mentor ID 2
+  };
+};
+
 interface AssistItem {
   text: string;
 }
@@ -272,6 +361,9 @@ export default function ServiceDetailsPage({
   // Get service data
   const service = getServiceById(params.serviceId);
 
+  // Get mentor data
+  const mentorData = getMentorData(params.id);
+
   // Show error if service not found
   if (!service) {
     return (
@@ -291,8 +383,24 @@ export default function ServiceDetailsPage({
     );
   }
 
-  // Get mentor name based on ID (simplified for demo)
-  const mentorName = "Jonny Rose";
+  // Show error if mentor not found
+  if (!mentorData) {
+    return (
+      <div className="min-h-screen bg-white flex flex-col items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-xl font-semibold text-[#0F172A] mb-4">
+            Mentor not found
+          </h1>
+          <Link
+            href="/mentors"
+            className="px-4 py-2 bg-[#334155] text-white text-sm font-semibold rounded-md hover:opacity-90"
+          >
+            Back to mentors
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   // Handle click outside to close dropdown
   useEffect(() => {
@@ -357,10 +465,12 @@ export default function ServiceDetailsPage({
           <div className="px-[113px]">
             {/* Mentor name with verification icon - aligned in the same line as back button */}
             <div className="flex items-center gap-2">
-              <h1 className="text-xl font-semibold text-[#0F172A]">
-                {mentorName}
+              <h1 className="text-xl -mt-1 font-semibold text-[#0F172A]">
+                {mentorData.name}
               </h1>
-              <ShieldCheck className="w-5 h-5 text-[#00C16A]" />
+              {mentorData.isVerified && (
+                <ShieldCheck className="w-5 h-5 text-[#00C16A]" />
+              )}
             </div>
 
             {/* Service Card */}
