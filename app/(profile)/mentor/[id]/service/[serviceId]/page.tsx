@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -40,6 +40,19 @@ const timeSlots = [
   "3:00 - 3:30PM",
 ];
 
+const timezones = [
+  "(GMT + 5:30) Chennai, Kolkata, Mumbai, New Delhi(IST)",
+  "(GMT + 0:00) London, Dublin, Edinburgh (GMT)",
+  "(GMT - 5:00) Eastern Time (US & Canada)",
+  "(GMT - 8:00) Pacific Time (US & Canada)",
+  "(GMT + 1:00) Paris, Berlin, Rome, Madrid (CET)",
+  "(GMT + 8:00) Beijing, Hong Kong, Singapore",
+  "(GMT + 9:00) Tokyo, Seoul (JST)",
+  "(GMT + 10:00) Sydney, Melbourne (AEST)",
+  "(GMT + 3:00) Moscow, St. Petersburg (MSK)",
+  "(GMT - 7:00) Mountain Time (US & Canada)",
+];
+
 export default function ServiceDetailsPage({
   params,
 }: {
@@ -47,6 +60,29 @@ export default function ServiceDetailsPage({
 }) {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<string | null>(null);
+  const [selectedTimezone, setSelectedTimezone] = useState<string>(
+    timezones[0],
+  );
+  const [isTimezoneDropdownOpen, setIsTimezoneDropdownOpen] =
+    useState<boolean>(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Handle click outside to close dropdown
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsTimezoneDropdownOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const formatDate = (date: Date) => {
     const days = [
@@ -243,10 +279,42 @@ export default function ServiceDetailsPage({
             <h3 className="text-lg font-medium text-[#0F172A] mb-3">
               Timezone
             </h3>
-            <button className="w-full px-4 py-2 text-sm text-[#334155] bg-white border border-[#CBD5E1] rounded-lg flex items-center justify-between">
-              <span>(GMT + 5:30) Chennai, Kolkata, Mumbai, New Delhi(IST)</span>
-              <ChevronDown className="w-4 h-4 text-[#64748B]" />
-            </button>
+            <div className="relative" ref={dropdownRef}>
+              <button
+                onClick={() =>
+                  setIsTimezoneDropdownOpen(!isTimezoneDropdownOpen)
+                }
+                className="w-full px-4 py-2 text-sm text-[#334155] bg-white border border-[#CBD5E1] rounded-lg flex items-center justify-between"
+              >
+                <span>{selectedTimezone}</span>
+                <ChevronDown
+                  className={`w-4 h-4 text-[#64748B] transition-transform duration-200 ${
+                    isTimezoneDropdownOpen ? "transform rotate-180" : ""
+                  }`}
+                />
+              </button>
+
+              {isTimezoneDropdownOpen && (
+                <div className="absolute z-10 mt-1 w-full bg-white border border-[#CBD5E1] rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                  {timezones.map((timezone, index) => (
+                    <button
+                      key={index}
+                      onClick={() => {
+                        setSelectedTimezone(timezone);
+                        setIsTimezoneDropdownOpen(false);
+                      }}
+                      className={`w-full px-4 py-2 text-sm text-left hover:bg-[#F1F5F9] ${
+                        selectedTimezone === timezone
+                          ? "bg-[#F1F5F9] text-[#334155] font-medium"
+                          : "text-[#334155]"
+                      }`}
+                    >
+                      {timezone}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Confirm button */}
