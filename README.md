@@ -1,36 +1,77 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# William Assignment
+
+A modern web application built with Next.js that provides a comprehensive solution for managing and visualizing data. Built with a focus on user experience and modern design principles.
+
+## Design Reference
+
+The application's design can be found in this [Figma file](https://www.figma.com/design/J1xundb9GzypHCy7ULrfVT/William's-Assignment?node-id=0-1&t=jxT0kO49JehV1FNq-1).
+
+## Features
+
+- 🎨 Beautiful, responsive design following the Figma specification
+- 🌓 Dark/Light mode support with next-themes
+- 📊 Interactive data visualization with Recharts
+- ✍️ Rich text editing capabilities with TipTap
+- 📝 Form handling with validation using React Hook Form and Zod
+- 🔔 Toast notifications for user feedback
+- 🎯 Type-safe development with TypeScript
+- 🎭 Modern UI components with shadcn/ui
 
 ## Getting Started
 
-First, run the development server:
+First, clone the repository:
+
+```bash
+git clone https://github.com/prathamdby/william-assignment.git
+cd william-assignment
+```
+
+Then, install the dependencies:
+
+```bash
+npm install
+```
+
+Finally, run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Tech Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Framework:** Next.js 14 with React 18
+- **Language:** TypeScript
+- **Styling:** TailwindCSS
+- **UI Components:** shadcn/ui with Radix UI primitives
+- **Icons:** Lucide React
+- **Form Handling:** React Hook Form with Zod validation
+- **Rich Text Editor:** TipTap
+- **Date Handling:** date-fns
+- **Charts:** Recharts
+- **Toast Notifications:** Sonner
+- **Theme:** next-themes for dark/light mode support
+
+## Project Structure
+
+- `app/` - Next.js application routes and layouts
+- `components/` - Reusable UI components
+- `hooks/` - Custom React hooks
+- `lib/` - Utility functions and configurations
+- `public/` - Static assets
 
 ## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+To learn more about the technologies used in this project:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API
+- [Tailwind CSS](https://tailwindcss.com/docs) - utility-first CSS framework
+- [shadcn/ui](https://ui.shadcn.com) - re-usable components built with Radix UI
+- [TipTap](https://tiptap.dev/docs) - headless rich text editor
+- [Recharts](https://recharts.org/en-US/) - composable charting library
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## License
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
