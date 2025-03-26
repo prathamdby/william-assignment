@@ -15,6 +15,7 @@ import {
   Presentation,
 } from "lucide-react";
 import { Calendar as CalendarComponent } from "@/components/Calendar";
+import RichTextEditor from "@/components/RichTextEditor";
 
 // Mentor data interface
 interface MentorData {
@@ -356,6 +357,7 @@ export default function ServiceDetailsPage({
   );
   const [isTimezoneDropdownOpen, setIsTimezoneDropdownOpen] =
     useState<boolean>(false);
+  const [questionContent, setQuestionContent] = useState<string>("");
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Get service data
@@ -446,6 +448,23 @@ export default function ServiceDetailsPage({
     return `${date.getDate()} ${months[date.getMonth()]}, ${
       days[date.getDay()]
     }`;
+  };
+
+  // Check if question has actual content beyond HTML tags
+  const hasQuestionContent = () => {
+    // Simple check for plain text content
+    return questionContent.trim().length > 0;
+  };
+
+  // Handle question submit
+  const handleQuestionSubmit = () => {
+    if (!hasQuestionContent()) return;
+
+    // Here you would typically send the question to an API
+    console.log("Submitting question:", questionContent);
+
+    // For this demo, just show an alert
+    alert("Your question has been submitted!");
   };
 
   return (
@@ -667,116 +686,143 @@ export default function ServiceDetailsPage({
 
       {/* Slot section - Show for all service types */}
       <div className="px-[113px] py-6 pb-12">
-        <h2 className="text-2xl font-medium text-[#0F172A] mb-8">Slot</h2>
+        <h2 className="text-2xl font-medium text-[#0F172A] mb-8">
+          {isDMService(service) ? "Your question" : "Slot"}
+        </h2>
 
-        {/* Date and Time selection */}
-        <div className="w-full rounded-xl border border-[#CBD5E1] shadow-[0_4px_6px_0_rgba(0,0,0,0.05)] p-6">
-          <div className="grid grid-cols-2 gap-8">
-            {/* Date picker */}
-            <div>
-              <div className="flex items-center gap-2 mb-2">
-                <Calendar className="w-5 h-5 text-[#3B82F6]" />
-                <span className="text-lg font-medium text-[#64748B]">Date</span>
-              </div>
-              <div className="rounded-lg overflow-hidden">
-                <CalendarComponent
-                  selectedDate={selectedDate}
-                  onDateSelect={setSelectedDate}
-                />
-              </div>
+        {isDMService(service) ? (
+          <>
+            {/* Text editor for Priority DM using RichTextEditor component */}
+            <RichTextEditor
+              placeholder="Ask your question"
+              onChange={(content) => setQuestionContent(content)}
+              className="mb-6"
+            />
+
+            {/* Next button - positioned exactly as in Figma */}
+            <div className="flex justify-end">
+              <button
+                onClick={handleQuestionSubmit}
+                disabled={!hasQuestionContent()}
+                className={`px-10 py-2 text-sm font-semibold rounded-md ${
+                  hasQuestionContent()
+                    ? "bg-[#334155] text-white"
+                    : "bg-[#E2E8F0] text-[#94A3B8]"
+                } hover:opacity-90 transition-colors`}
+              >
+                Next
+              </button>
             </div>
-
-            {/* Time slots */}
-            <div>
-              <div className="flex items-center gap-2 mb-2">
-                <Clock className="w-5 h-5 text-[#3B82F6]" />
-                <span className="text-lg font-medium text-[#64748B]">Time</span>
-              </div>
-              <div className="p-4 border border-[#E2E8F0] rounded-lg bg-[#F8FAFC]">
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="text-sm font-medium text-[#0F172A]">
-                    {formatDate(selectedDate)}
+          </>
+        ) : (
+          <div className="w-full rounded-xl border border-[#CBD5E1] shadow-[0_4px_6px_0_rgba(0,0,0,0.05)] p-6">
+            <div className="grid grid-cols-2 gap-8">
+              {/* Date picker */}
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <Calendar className="w-5 h-5 text-[#3B82F6]" />
+                  <span className="text-lg font-medium text-[#64748B]">
+                    Date
                   </span>
                 </div>
-                <div className="grid grid-cols-2 gap-3">
-                  {timeSlots.map((time, index) => {
-                    const isSelected = selectedTimeSlot === time;
-                    const isFirst = time === "6:00 - 6:30PM";
-                    return (
-                      <button
-                        key={time}
-                        onClick={() => setSelectedTimeSlot(time)}
-                        className={`px-3 py-2 text-xs font-medium rounded border ${
-                          isSelected
-                            ? "border-[#334155] bg-[#334155] text-white"
-                            : isFirst && !isSelected
-                              ? "border-[#64748B] bg-[#F3F4F6] text-[#334155]"
-                              : "border-[#E2E8F0] bg-white text-[#334155] hover:border-[#64748B]"
-                        }`}
-                      >
-                        {time}
-                      </button>
-                    );
-                  })}
+                <div className="rounded-lg overflow-hidden">
+                  <CalendarComponent
+                    selectedDate={selectedDate}
+                    onDateSelect={setSelectedDate}
+                  />
+                </div>
+              </div>
+
+              {/* Time slots */}
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <Clock className="w-5 h-5 text-[#3B82F6]" />
+                  <span className="text-lg font-medium text-[#64748B]">
+                    Time
+                  </span>
+                </div>
+                <div className="p-4 border border-[#E2E8F0] rounded-lg bg-[#F8FAFC]">
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="text-sm font-medium text-[#0F172A]">
+                      {formatDate(selectedDate)}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    {timeSlots.map((time, index) => {
+                      const isSelected = selectedTimeSlot === time;
+                      const isFirst = time === "6:00 - 6:30PM";
+                      return (
+                        <button
+                          key={time}
+                          onClick={() => setSelectedTimeSlot(time)}
+                          className={`px-3 py-2 text-xs font-medium rounded border ${
+                            isSelected
+                              ? "border-[#334155] bg-[#334155] text-white"
+                              : isFirst && !isSelected
+                                ? "border-[#64748B] bg-[#F3F4F6] text-[#334155]"
+                                : "border-[#E2E8F0] bg-white text-[#334155] hover:border-[#64748B]"
+                          }`}
+                        >
+                          {time}
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Timezone */}
-          <div className="mt-6 pb-6 border-b border-[#E2E8F0]">
-            <h3 className="text-lg font-medium text-[#0F172A] mb-3">
-              Timezone
-            </h3>
-            <div className="relative" ref={dropdownRef}>
-              <button
-                onClick={() =>
-                  setIsTimezoneDropdownOpen(!isTimezoneDropdownOpen)
-                }
-                className="w-full px-4 py-2 text-sm text-[#334155] bg-white border border-[#CBD5E1] rounded-lg flex items-center justify-between"
-              >
-                <span>{selectedTimezone}</span>
-                <ChevronDown
-                  className={`w-4 h-4 text-[#64748B] transition-transform duration-200 ${
-                    isTimezoneDropdownOpen ? "transform rotate-180" : ""
-                  }`}
-                />
+            {/* Timezone */}
+            <div className="mt-6 pb-6 border-b border-[#E2E8F0]">
+              <h3 className="text-lg font-medium text-[#0F172A] mb-3">
+                Timezone
+              </h3>
+              <div className="relative" ref={dropdownRef}>
+                <button
+                  onClick={() =>
+                    setIsTimezoneDropdownOpen(!isTimezoneDropdownOpen)
+                  }
+                  className="w-full px-4 py-2 text-sm text-[#334155] bg-white border border-[#CBD5E1] rounded-lg flex items-center justify-between"
+                >
+                  <span>{selectedTimezone}</span>
+                  <ChevronDown
+                    className={`w-4 h-4 text-[#64748B] transition-transform duration-200 ${
+                      isTimezoneDropdownOpen ? "transform rotate-180" : ""
+                    }`}
+                  />
+                </button>
+
+                {isTimezoneDropdownOpen && (
+                  <div className="absolute z-10 mt-1 w-full bg-white border border-[#CBD5E1] rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                    {timezones.map((timezone, index) => (
+                      <button
+                        key={index}
+                        onClick={() => {
+                          setSelectedTimezone(timezone);
+                          setIsTimezoneDropdownOpen(false);
+                        }}
+                        className={`w-full px-4 py-2 text-sm text-left hover:bg-[#F1F5F9] ${
+                          selectedTimezone === timezone
+                            ? "bg-[#F1F5F9] text-[#334155] font-medium"
+                            : "text-[#334155]"
+                        }`}
+                      >
+                        {timezone}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Confirm button */}
+            <div className="mt-6 flex justify-end">
+              <button className="px-4 py-2 text-white text-sm font-semibold rounded-md bg-[#334155] hover:opacity-90">
+                {isProductService(service) ? "Get Now" : "Confirm details"}
               </button>
-
-              {isTimezoneDropdownOpen && (
-                <div className="absolute z-10 mt-1 w-full bg-white border border-[#CBD5E1] rounded-lg shadow-lg max-h-60 overflow-y-auto">
-                  {timezones.map((timezone, index) => (
-                    <button
-                      key={index}
-                      onClick={() => {
-                        setSelectedTimezone(timezone);
-                        setIsTimezoneDropdownOpen(false);
-                      }}
-                      className={`w-full px-4 py-2 text-sm text-left hover:bg-[#F1F5F9] ${
-                        selectedTimezone === timezone
-                          ? "bg-[#F1F5F9] text-[#334155] font-medium"
-                          : "text-[#334155]"
-                      }`}
-                    >
-                      {timezone}
-                    </button>
-                  ))}
-                </div>
-              )}
             </div>
           </div>
-
-          {/* Confirm button */}
-          <div className="mt-6 flex justify-end">
-            <button className="px-4 py-2 text-white text-sm font-semibold rounded-md bg-[#334155] hover:opacity-90">
-              {isDMService(service)
-                ? "Send Message"
-                : isProductService(service)
-                  ? "Get Now"
-                  : "Confirm details"}
-            </button>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );
