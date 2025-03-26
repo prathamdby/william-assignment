@@ -53,6 +53,14 @@ const ratingOptions = [
   { id: 2, label: "High to low", value: "high-to-low" },
 ];
 
+// Add back the trendingSearches array
+const trendingSearches = [
+  { id: 1, label: "Microsoft" },
+  { id: 2, label: "Slack" },
+  { id: 3, label: "Google" },
+  { id: 4, label: "Amazon" },
+];
+
 interface MentorSearchProps {
   onSearch?: (term: string) => void;
   onFilterChange?: (activeFilters: {
@@ -108,12 +116,30 @@ export function MentorSearch({
   // Slide-up filter panel state
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
 
-  const trendingSearches = [
-    { id: 1, label: "Microsoft" },
-    { id: 2, label: "Slack" },
-    { id: 3, label: "Google" },
-    { id: 4, label: "Amazon" },
-  ];
+  // Dropdown states for desktop filters
+  const [isRoleOpen, setIsRoleOpen] = useState(false);
+  const [isCompanyOpen, setIsCompanyOpen] = useState(false);
+  const [isSlotOpen, setIsSlotOpen] = useState(false);
+  const [isRatingOpen, setIsRatingOpen] = useState(false);
+
+  // Track if we're on mobile
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    // Detect if we're on mobile
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    // Initial check
+    checkIfMobile();
+
+    // Add resize listener
+    window.addEventListener("resize", checkIfMobile);
+
+    // Cleanup
+    return () => window.removeEventListener("resize", checkIfMobile);
+  }, []);
 
   // Update internal filters when activeFilters changes from parent
   useEffect(() => {
@@ -472,12 +498,12 @@ export function MentorSearch({
           )}
         </div>
 
-        {/* Filters Button */}
+        {/* Mobile Filters Button - only visible on mobile */}
         <Button
           variant="outline"
           size="sm"
           onClick={() => setIsFilterPanelOpen(true)}
-          className="flex items-center gap-2 h-10 px-4 py-2 bg-white border border-[#CBD5E1] rounded-md text-xs font-medium text-[#334155]"
+          className="md:hidden flex items-center gap-2 h-10 px-4 py-2 bg-white border border-[#CBD5E1] rounded-md text-xs font-medium text-[#334155]"
         >
           <Sliders size={16} className="text-[#94A3B8]" />
           <span>Filters</span>
@@ -487,22 +513,49 @@ export function MentorSearch({
             </span>
           )}
         </Button>
+
+        {/* Desktop Filter Buttons - only visible on desktop */}
+        <div className="hidden md:flex items-center gap-6">
+          <RoleFilterButton
+            roleFilters={roleFilters}
+            onRoleChange={handleRoleFilterChange}
+            isOpen={isRoleOpen}
+            setIsOpen={setIsRoleOpen}
+          />
+          <CompanyFilterButton
+            companyFilters={companyFilters}
+            onCompanyChange={handleCompanyFilterChange}
+            isOpen={isCompanyOpen}
+            setIsOpen={setIsCompanyOpen}
+          />
+          <SlotFilterButton
+            slotFilter={slotFilter}
+            onSlotChange={handleSlotFilterChange}
+            isOpen={isSlotOpen}
+            setIsOpen={setIsSlotOpen}
+          />
+          <RatingFilterButton
+            ratingFilter={ratingFilter}
+            onRatingChange={handleRatingFilterChange}
+            isOpen={isRatingOpen}
+            setIsOpen={setIsRatingOpen}
+          />
+        </div>
       </div>
 
-      {/* Slide-up Filter Panel Overlay */}
+      {/* Slide-up Filter Panel Overlay - only for mobile */}
       {isFilterPanelOpen && (
         <div
-          className="fixed inset-0 bg-black/20 z-50"
+          className="md:hidden fixed inset-0 bg-black/20 z-50"
           onClick={() => setIsFilterPanelOpen(false)}
         />
       )}
 
-      {/* Slide-up Filter Panel */}
+      {/* Slide-up Filter Panel - only for mobile */}
       <div
-        className={cn(
-          "fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-lg z-50 transform transition-transform duration-300 ease-in-out p-5",
-          isFilterPanelOpen ? "translate-y-0" : "translate-y-full",
-        )}
+        className={`md:hidden fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-lg z-50 transform transition-transform duration-300 ease-in-out p-5 ${
+          isFilterPanelOpen ? "translate-y-0" : "translate-y-full"
+        }`}
         style={{ maxHeight: "80vh", overflowY: "auto" }}
       >
         <div className="flex justify-between items-center mb-4">
@@ -526,7 +579,6 @@ export function MentorSearch({
           </div>
         </div>
 
-        {/* Filter content */}
         <div className="space-y-6">
           {/* Role filters */}
           <div>
@@ -638,8 +690,349 @@ export function MentorSearch({
         </div>
 
         {/* Bottom padding for mobile */}
-        <div className="h-6 md:hidden" />
+        <div className="h-6" />
       </div>
     </>
+  );
+}
+
+// Add back the original desktop filter components
+
+interface RoleFilterButtonProps {
+  roleFilters: string[];
+  onRoleChange: (value: string) => void;
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+}
+
+function RoleFilterButton({
+  roleFilters,
+  onRoleChange,
+  isOpen,
+  setIsOpen,
+}: RoleFilterButtonProps) {
+  return (
+    <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="outline"
+          className={`relative h-10 px-3 py-1.5 text-xs font-medium border-[#CBD5E1] ${
+            isOpen
+              ? "bg-[#F8FAFC] text-[#334155] border-[#CBD5E1]"
+              : "text-[#334155]"
+          } rounded-md flex items-center gap-2`}
+        >
+          Role
+          {isOpen ? (
+            <ChevronUp size={16} className="text-[#94A3B8]" />
+          ) : (
+            <ChevronDown size={16} className="text-[#94A3B8]" />
+          )}
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
+        align="start"
+        className="bg-white w-[184px] shadow-lg rounded-[6px] border border-[#E2E8F0] mt-4 p-1 overflow-visible"
+        style={{
+          boxShadow:
+            "0px 10px 15px 0px rgba(0, 0, 0, 0.1), 0px 4px 6px 0px rgba(0, 0, 0, 0.05)",
+        }}
+        sideOffset={0}
+      >
+        <div className="relative">
+          <div className="absolute top-[-9px] left-[24px] w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-b-[8px] border-b-[#E2E8F0]"></div>
+          <div className="absolute top-[-8px] left-[24px] w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-b-[8px] border-b-white"></div>
+        </div>
+        <div className="py-1">
+          {roleOptions.map((option) => (
+            <div
+              key={option.id}
+              className="flex items-center gap-2 px-2 py-1.5 hover:bg-[#F8FAFC] rounded-[6px] cursor-pointer"
+              onClick={() => onRoleChange(option.value)}
+            >
+              <div
+                className={`h-4 w-4 border ${
+                  roleFilters.includes(option.value)
+                    ? "border-[#334155]"
+                    : "border-[#94A3B8]"
+                } rounded-sm flex items-center justify-center`}
+              >
+                {roleFilters.includes(option.value) && (
+                  <svg
+                    width="10"
+                    height="10"
+                    viewBox="0 0 10 10"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M8.33334 2.5L3.75001 7.08333L1.66667 5"
+                      stroke="#334155"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                )}
+              </div>
+              <span className="text-xs font-medium text-[#334155]">
+                {option.label}
+              </span>
+            </div>
+          ))}
+        </div>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
+interface CompanyFilterButtonProps {
+  companyFilters: string[];
+  onCompanyChange: (value: string) => void;
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+}
+
+function CompanyFilterButton({
+  companyFilters,
+  onCompanyChange,
+  isOpen,
+  setIsOpen,
+}: CompanyFilterButtonProps) {
+  return (
+    <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="outline"
+          className={`relative h-10 px-3 py-1.5 text-xs font-medium border-[#CBD5E1] ${
+            isOpen
+              ? "bg-[#F8FAFC] text-[#334155] border-[#CBD5E1]"
+              : "text-[#334155]"
+          } rounded-md flex items-center gap-2`}
+        >
+          Company
+          {isOpen ? (
+            <ChevronUp size={16} className="text-[#94A3B8]" />
+          ) : (
+            <ChevronDown size={16} className="text-[#94A3B8]" />
+          )}
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
+        align="start"
+        className="bg-white w-[184px] shadow-lg rounded-[6px] border border-[#E2E8F0] mt-4 p-1 overflow-visible"
+        style={{
+          boxShadow:
+            "0px 10px 15px 0px rgba(0, 0, 0, 0.1), 0px 4px 6px 0px rgba(0, 0, 0, 0.05)",
+        }}
+        sideOffset={0}
+      >
+        <div className="relative">
+          <div className="absolute top-[-9px] left-[24px] w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-b-[8px] border-b-[#E2E8F0]"></div>
+          <div className="absolute top-[-8px] left-[24px] w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-b-[8px] border-b-white"></div>
+        </div>
+        <div className="py-1">
+          {companyOptions.map((option) => (
+            <div
+              key={option.id}
+              className="flex items-center gap-2 px-2 py-1.5 hover:bg-[#F8FAFC] rounded-[6px] cursor-pointer"
+              onClick={() => onCompanyChange(option.value)}
+            >
+              <div
+                className={`h-4 w-4 border ${
+                  companyFilters.includes(option.value)
+                    ? "border-[#334155]"
+                    : "border-[#94A3B8]"
+                } rounded-sm flex items-center justify-center`}
+              >
+                {companyFilters.includes(option.value) && (
+                  <svg
+                    width="10"
+                    height="10"
+                    viewBox="0 0 10 10"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M8.33334 2.5L3.75001 7.08333L1.66667 5"
+                      stroke="#334155"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                )}
+              </div>
+              <span className="text-xs font-medium text-[#334155]">
+                {option.label}
+              </span>
+            </div>
+          ))}
+        </div>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
+interface SlotFilterButtonProps {
+  slotFilter: string;
+  onSlotChange: (value: string) => void;
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+}
+
+function SlotFilterButton({
+  slotFilter,
+  onSlotChange,
+  isOpen,
+  setIsOpen,
+}: SlotFilterButtonProps) {
+  return (
+    <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="outline"
+          className={`relative h-10 px-3 py-1.5 text-xs font-medium border-[#CBD5E1] ${
+            isOpen
+              ? "bg-[#F8FAFC] text-[#334155] border-[#CBD5E1]"
+              : "text-[#334155]"
+          } rounded-md flex items-center gap-2`}
+        >
+          Slot
+          {isOpen ? (
+            <ChevronUp size={16} className="text-[#94A3B8]" />
+          ) : (
+            <ChevronDown size={16} className="text-[#94A3B8]" />
+          )}
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
+        align="start"
+        className="bg-white w-[184px] shadow-lg rounded-[6px] border border-[#E2E8F0] mt-4 p-1 overflow-visible"
+        style={{
+          boxShadow:
+            "0px 10px 15px 0px rgba(0, 0, 0, 0.1), 0px 4px 6px 0px rgba(0, 0, 0, 0.05)",
+        }}
+        sideOffset={0}
+      >
+        <div className="relative">
+          <div className="absolute top-[-9px] left-[24px] w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-b-[8px] border-b-[#E2E8F0]"></div>
+          <div className="absolute top-[-8px] left-[24px] w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-b-[8px] border-b-white"></div>
+        </div>
+        <div className="py-1">
+          {slotOptions.map((option) => (
+            <div
+              key={option.id}
+              className="flex items-center gap-2 px-2 py-1.5 hover:bg-[#F8FAFC] rounded-[6px] cursor-pointer"
+              onClick={() => onSlotChange(option.value)}
+            >
+              <div
+                className={`h-4 w-4 rounded-full border ${
+                  slotFilter === option.value
+                    ? "border-[#334155]"
+                    : "border-[#94A3B8]"
+                } flex items-center justify-center`}
+              >
+                {slotFilter === option.value && (
+                  <div className="h-2 w-2 rounded-full bg-[#334155]"></div>
+                )}
+              </div>
+              <span className="text-xs font-medium text-[#334155]">
+                {option.label}
+              </span>
+            </div>
+          ))}
+        </div>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
+interface RatingFilterButtonProps {
+  ratingFilter: string;
+  onRatingChange: (value: string) => void;
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+}
+
+function RatingFilterButton({
+  ratingFilter,
+  onRatingChange,
+  isOpen,
+  setIsOpen,
+}: RatingFilterButtonProps) {
+  return (
+    <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="outline"
+          className={`relative h-10 px-3 py-1.5 text-xs font-medium border-[#CBD5E1] ${
+            isOpen
+              ? "bg-[#F8FAFC] text-[#334155] border-[#CBD5E1]"
+              : "text-[#334155]"
+          } rounded-md flex items-center gap-2`}
+        >
+          Rating
+          {isOpen ? (
+            <ChevronUp size={16} className="text-[#94A3B8]" />
+          ) : (
+            <ChevronDown size={16} className="text-[#94A3B8]" />
+          )}
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
+        align="end"
+        className="bg-white w-[184px] shadow-lg rounded-[6px] border border-[#E2E8F0] mt-4 p-1 overflow-visible"
+        style={{
+          boxShadow:
+            "0px 10px 15px 0px rgba(0, 0, 0, 0.1), 0px 4px 6px 0px rgba(0, 0, 0, 0.05)",
+          position: "relative",
+        }}
+        sideOffset={0}
+      >
+        {/* Custom arrow positioned at the top right */}
+        <div
+          className="absolute"
+          style={{
+            top: "-8px",
+            right: "24px",
+          }}
+        >
+          <div
+            className="w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-b-[8px] border-b-[#E2E8F0] absolute"
+            style={{ top: "-1px", right: "0" }}
+          ></div>
+          <div
+            className="w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-b-[8px] border-b-white absolute"
+            style={{ top: "0px", right: "0" }}
+          ></div>
+        </div>
+
+        <div className="py-1">
+          {ratingOptions.map((option) => (
+            <div
+              key={option.id}
+              className="flex items-center gap-2 px-2 py-1.5 hover:bg-[#F8FAFC] rounded-[6px] cursor-pointer"
+              onClick={() => onRatingChange(option.value)}
+            >
+              <div
+                className={`h-4 w-4 rounded-full border ${
+                  ratingFilter === option.value
+                    ? "border-[#334155]"
+                    : "border-[#94A3B8]"
+                } flex items-center justify-center`}
+              >
+                {ratingFilter === option.value && (
+                  <div className="h-2 w-2 rounded-full bg-[#334155]"></div>
+                )}
+              </div>
+              <span className="text-xs font-medium text-[#334155]">
+                {option.label}
+              </span>
+            </div>
+          ))}
+        </div>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
