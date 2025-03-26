@@ -138,35 +138,49 @@ const RichTextEditor = ({
           font-family: 'DM Sans', sans-serif;
         }
         .ProseMirror p {
-          margin: 0.5rem 0;
+          margin: 0;
+          padding: 0;
+          line-height: 20px;
+          color: #334155;
+          font-size: 16px;
         }
         .ProseMirror h1 {
           font-size: 1.5rem;
           font-weight: 600;
-          margin: 1rem 0 0.5rem;
+          margin: 0;
+          padding: 0;
           color: #1E293B;
+          line-height: 1.3;
         }
         .ProseMirror h2 {
           font-size: 1.25rem;
           font-weight: 600;
-          margin: 1rem 0 0.5rem;
+          margin: 0;
+          padding: 0;
           color: #1E293B;
+          line-height: 1.3;
         }
         .ProseMirror h3 {
           font-size: 1.125rem;
           font-weight: 600;
-          margin: 1rem 0 0.5rem;
+          margin: 0;
+          padding: 0;
           color: #1E293B;
+          line-height: 1.3;
         }
         .ProseMirror h4, .ProseMirror h5, .ProseMirror h6 {
           font-size: 1rem;
           font-weight: 600;
-          margin: 1rem 0 0.5rem;
+          margin: 0;
+          padding: 0;
           color: #1E293B;
+          line-height: 1.3;
         }
         .ProseMirror ul, .ProseMirror ol {
           padding-left: 1.5rem;
-          margin: 0.5rem 0;
+          margin: 0;
+          padding-top: 0;
+          padding-bottom: 0;
         }
         .ProseMirror ul {
           list-style-type: disc;
@@ -342,7 +356,9 @@ const RichTextEditor = ({
   return (
     <div
       className={`w-full rounded-md border ${
-        isFocused ? "border-blue-500 ring-1 ring-blue-200" : "border-[#CBD5E1]"
+        isFocused
+          ? "border-slate-700 ring-1 ring-slate-700"
+          : "border-[#CBD5E1]"
       } bg-[#F8FAFC] overflow-hidden transition-colors ${className}`}
     >
       {/* Text formatting toolbar - exact match to Figma design */}
@@ -487,10 +503,10 @@ const RichTextEditor = ({
       </div>
 
       {/* Editor content area */}
-      <div className="w-full min-h-[272px] p-6">
+      <div className="w-full min-h-[272px] px-6 py-4">
         <EditorContent
           editor={editor}
-          className="outline-none w-full h-full min-h-[240px] text-[#334155] text-sm font-['DM_Sans'] font-medium"
+          className="outline-none w-full h-full min-h-[240px] text-slate-700 text-[16px] leading-[20px] font-['DM_Sans']"
         />
       </div>
     </div>
