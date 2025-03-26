@@ -382,7 +382,7 @@ export default function MentorProfilePage({
           </div>
 
           {/* Bio */}
-          <div className="p-3 bg-[#F1F5F9] w-[1387px] rounded-md">
+          <div className="p-3 bg-[#F1F5F9] w-full min-w-[730px] rounded-md">
             <p className="text-sm text-[#334155]">{mentorData.bio}</p>
           </div>
         </div>
