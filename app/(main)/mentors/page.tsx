@@ -202,9 +202,9 @@ export default function MentorsPage() {
     <div className="flex flex-col min-h-screen">
       <NoResultsToast show={showNoResultsToast} onHide={hideNoResultsToast} />
 
-      <div className="bg-[#DBEAFE] py-4 px-[106px]">
+      <div className="bg-[#DBEAFE] py-4 px-4 md:px-6 lg:px-[106px]">
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-medium font-montserrat text-[#0F172A]">
+          <h1 className="text-xl md:text-2xl font-medium font-montserrat text-[#0F172A]">
             Mentors
           </h1>
 
@@ -230,7 +230,7 @@ export default function MentorsPage() {
         </div>
       </div>
 
-      <div className="py-6 px-[106px]">
+      <div className="py-4 md:py-6 px-4 md:px-6 lg:px-[106px]">
         <MentorSearch
           onSearch={handleSearch}
           onFilterChange={handleFilterChange}
@@ -244,7 +244,7 @@ export default function MentorsPage() {
         onRemoveFilter={handleRemoveFilter}
       />
 
-      <div className="flex-1 px-[106px] space-y-4">
+      <div className="flex-1 px-4 md:px-6 lg:px-[106px] space-y-4 pb-6">
         {filteredMentors.length > 0 ? (
           filteredMentors.map((mentor) => (
             <MentorCard
@@ -260,8 +260,9 @@ export default function MentorsPage() {
             />
           ))
         ) : (
-          <div className="text-center py-12 text-gray-500">
-            No mentors found matching your search criteria.
+          <div className="text-center py-8">
+            <p className="text-[#64748B] text-lg">No mentors found.</p>
+            <p className="text-[#64748B]">Try adjusting your filters.</p>
           </div>
         )}
       </div>

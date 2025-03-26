@@ -11,7 +11,7 @@ import {
 
 export function TopNavbar() {
   return (
-    <div className="w-full flex justify-end items-center gap-4 py-4 px-4 border-b border-[#E2E8F0]">
+    <div className="w-full flex justify-end items-center gap-4 py-4 px-4 md:px-6 border-b border-[#E2E8F0]">
       <button className="w-8 h-8 rounded-md flex items-center justify-center shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)] border border-[#CBD5E1]">
         <BellIcon className="w-5 h-5 text-[#94A3B8]" />
       </button>

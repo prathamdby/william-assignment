@@ -27,8 +27,8 @@ export function MentorCard({
   reviews = 3,
 }: MentorCardProps) {
   return (
-    <div className="w-full rounded-xl border border-[#CBD5E1] shadow-[0_4px_6px_0_rgba(0,0,0,0.05)] p-6 flex gap-6">
-      <div className="min-w-[184px] h-[184px]">
+    <div className="w-full rounded-xl border border-[#CBD5E1] shadow-[0_4px_6px_0_rgba(0,0,0,0.05)] p-4 sm:p-6 flex flex-col sm:flex-row gap-4 sm:gap-6">
+      <div className="w-full sm:min-w-[184px] sm:w-[184px] h-[184px]">
         <div className="relative w-full h-full rounded-lg overflow-hidden">
           <Image
             src={imgSrc}
@@ -59,8 +59,8 @@ export function MentorCard({
       </div>
 
       <div className="flex-1 flex flex-col gap-3">
-        <div className="flex justify-between items-start">
-          <div className="space-y-1 max-w-[400px]">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 sm:gap-0">
+          <div className="space-y-1 max-w-full sm:max-w-[400px]">
             <div className="flex items-center gap-2">
               <h3 className="text-xl font-semibold text-[#334155]">{name}</h3>
               {isVerified && (
@@ -72,8 +72,8 @@ export function MentorCard({
             </p>
           </div>
 
-          <Link href={`/mentor/${id}`}>
-            <button className="h-10 px-3 py-2 bg-[#334155] text-white text-xs font-semibold rounded-md">
+          <Link href={`/mentor/${id}`} className="w-full sm:w-auto">
+            <button className="w-full sm:w-auto h-10 px-3 py-2 bg-[#334155] text-white text-xs font-semibold rounded-md">
               View profile
             </button>
           </Link>
