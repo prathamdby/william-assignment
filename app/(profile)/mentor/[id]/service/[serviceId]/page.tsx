@@ -475,7 +475,7 @@ export default function ServiceDetailsPage({
           {/* Back button - positioned absolutely to maintain position */}
           <Link
             href={`/mentor/${params.id}`}
-            className="absolute top-6 left-8 flex items-center gap-2 text-sm"
+            className="absolute top-6 left-2 flex items-center gap-2 text-sm"
           >
             <ArrowLeft className="w-5 h-5 text-[#94A3B8]" />
             <span className="text-[#64748B]">Back</span>
