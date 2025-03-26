@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { BadgeCheckIcon } from "lucide-react";
+import { ShieldCheckIcon } from "lucide-react";
 import Link from "next/link";
 
 interface MentorCardProps {
@@ -64,7 +64,7 @@ export function MentorCard({
             <div className="flex items-center gap-2">
               <h3 className="text-xl font-semibold text-[#334155]">{name}</h3>
               {isVerified && (
-                <BadgeCheckIcon className="w-5 h-5 text-[#00C16A]" />
+                <ShieldCheckIcon className="w-5 h-5 text-[#00C16A]" />
               )}
             </div>
             <p className="text-lg text-[#334155]">

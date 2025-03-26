@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
-  BadgeCheckIcon,
+  ShieldCheckIcon,
   Share2,
   X,
   Video,
@@ -334,7 +334,7 @@ export default function MentorProfilePage({
                   {mentorData.name}
                 </h1>
                 {mentorData.isVerified && (
-                  <BadgeCheckIcon className="w-5 h-5 text-[#00C16A]" />
+                  <ShieldCheckIcon className="w-5 h-5 text-[#00C16A]" />
                 )}
               </div>
               <p className="text-lg text-[#334155]">
