@@ -26,7 +26,9 @@ import {
   Video as VideoIcon,
   Smile as SmileIcon,
   AlignLeft,
+  Trash2,
 } from "lucide-react";
+import { UploadErrorToast } from "./ui/upload-error-toast";
 
 // Define the type for heading levels
 type Level = 1 | 2 | 3 | 4 | 5 | 6;
@@ -48,6 +50,20 @@ const RichTextEditor = ({
   const [currentHeadingLevel, setCurrentHeadingLevel] = useState<Level>(1);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isFocused, setIsFocused] = useState(false);
+  const [uploadedImage, setUploadedImage] = useState<{
+    url: string;
+    name: string;
+  } | null>(null);
+
+  const [uploadedImages, setUploadedImages] = useState<
+    Array<{
+      url: string;
+      name: string;
+    }>
+  >([]);
+
+  // Add state for the toast
+  const [showUploadFailToast, setShowUploadFailToast] = useState(false);
 
   // Initialize TipTap editor
   const editor = useEditor({
@@ -214,6 +230,181 @@ const RichTextEditor = ({
           font-family: monospace;
           font-size: 0.9em;
         }
+        .ProseMirror .image-card {
+          background-color: #EFF6FF;
+          padding: 16px;
+          border-radius: 4px;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          margin: 8px 0;
+          cursor: default;
+          user-select: none;
+        }
+        .ProseMirror .file-name {
+          color: #334155;
+          font-size: 16px;
+          font-weight: 500;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          flex: 1;
+        }
+        .ProseMirror .delete-btn {
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .ProseMirror .delete-btn:hover {
+          opacity: 0.8;
+        }
+        .ProseMirror .image-uploader {
+          background-color: #F1F5F9;
+          border: 1px solid #CBD5E1;
+          padding: 8px 12px;
+          border-radius: 4px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          width: 100%;
+          max-width: 438px;
+          height: 177px;
+          position: relative;
+          margin: 8px 0;
+          cursor: default;
+          user-select: none;
+        }
+        .ProseMirror .image-uploader .file-name {
+          color: #334155;
+          font-size: 14px;
+          font-weight: 600;
+          font-family: 'DM Sans', sans-serif;
+        }
+        .ProseMirror .image-uploader img {
+          max-width: 350px;
+          max-height: 120px;
+          object-fit: contain;
+        }
+        .ProseMirror .uploader-container {
+          margin: 8px 0;
+        }
+        .ProseMirror .resume-uploader {
+          background-color: #F1F5F9;
+          border: 1px solid #CBD5E1;
+          border-radius: 4px;
+          width: 438px;
+          height: 177px;
+          position: relative;
+          padding: 12px;
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+        }
+        .ProseMirror .resume-info {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+        .ProseMirror .resume-icon {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #60A5FA;
+        }
+        .ProseMirror .resume-filename {
+          font-family: 'DM Sans', sans-serif;
+          font-size: 14px;
+          font-weight: 600;
+          color: #334155;
+        }
+        .ProseMirror .resume-delete {
+          color: #EF4444;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .ProseMirror .resume-delete:hover {
+          opacity: 0.8;
+        }
+        .ProseMirror .resume-image {
+          position: absolute;
+          left: 44px;
+          top: 40px;
+          width: 350px;
+          height: 120px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .ProseMirror .resume-image img {
+          max-width: 100%;
+          max-height: 100%;
+          object-fit: contain;
+        }
+        .ProseMirror .image-preview-container {
+          margin: 8px 0;
+        }
+        
+        .ProseMirror .image-preview-box {
+          background-color: #EFF6FF;
+          border-radius: 4px;
+          width: 100%;
+          position: relative;
+          padding: 16px;
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+        }
+        
+        .ProseMirror .image-preview-header {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+        
+        .ProseMirror .image-preview-icon {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #60A5FA;
+        }
+        
+        .ProseMirror .image-preview-filename {
+          font-family: 'DM Sans', sans-serif;
+          font-size: 14px;
+          font-weight: 600;
+          color: #334155;
+        }
+        
+        .ProseMirror .image-preview-delete {
+          color: #EF4444;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        
+        .ProseMirror .image-preview-delete:hover {
+          opacity: 0.8;
+        }
+        
+        .ProseMirror .image-preview-content {
+          padding-top: 12px;
+          width: 100%;
+          display: flex;
+          justify-content: center;
+        }
+        
+        .ProseMirror .image-preview-content img {
+          max-width: 100%;
+          max-height: 150px;
+          object-fit: contain;
+          border: 1px solid #CBD5E1;
+          background-color: #F8FAFC;
+          padding: 4px;
+        }
       `;
       document.head.appendChild(style);
 
@@ -229,10 +420,48 @@ const RichTextEditor = ({
 
   // Handle image insertion
   const handleImageInsert = () => {
-    const url = window.prompt("Enter image URL");
-    if (url) {
-      editor.chain().focus().setImage({ src: url }).run();
-    }
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.multiple = true; // Allow multiple file selection
+
+    input.onchange = (event) => {
+      const files = (event.target as HTMLInputElement).files;
+      if (files && files.length > 0) {
+        // Check if adding these files would exceed the limit
+        if (uploadedImages.length + files.length > 3) {
+          // Show failure toast
+          setShowUploadFailToast(true);
+          return;
+        }
+
+        // Process all selected files
+        const newImages = Array.from(files).map((file) => {
+          // Create a URL for each uploaded image
+          const imageUrl = URL.createObjectURL(file);
+
+          // Process filename - use a more readable name if it's too long
+          let fileName = file.name;
+
+          // If it's a very long filename or URL, create a more readable name
+          if (fileName.length > 50) {
+            // Try to extract a more reasonable filename
+            const extension = fileName.split(".").pop() || "";
+            fileName = `image_${Date.now()}.${extension}`;
+          }
+
+          return {
+            url: imageUrl,
+            name: fileName,
+          };
+        });
+
+        // Add all new images to the list
+        setUploadedImages((prev) => [...prev, ...newImages]);
+      }
+    };
+
+    input.click();
   };
 
   // Handle link insertion
@@ -361,6 +590,12 @@ const RichTextEditor = ({
           : "border-[#CBD5E1]"
       } bg-[#F8FAFC] overflow-hidden transition-colors ${className}`}
     >
+      {/* Toast for failed upload */}
+      <UploadErrorToast
+        show={showUploadFailToast}
+        onHide={() => setShowUploadFailToast(false)}
+      />
+
       {/* Text formatting toolbar - exact match to Figma design */}
       <div className="flex items-center px-6 py-3 border-b border-[#E2E8F0]">
         {/* All formatting options in a single row with equal spacing */}
@@ -509,6 +744,62 @@ const RichTextEditor = ({
           className="outline-none w-full h-full min-h-[240px] text-slate-700 text-[16px] leading-[20px] font-['DM_Sans']"
         />
       </div>
+
+      {/* Display uploaded images below the editor */}
+      {uploadedImages.length > 0 && (
+        <div className="px-6 pb-4 flex flex-wrap gap-4">
+          {uploadedImages.map((image, index) => (
+            <div
+              key={index}
+              className="bg-[#F1F5F9] border border-[#CBD5E1] rounded-md p-3 w-[438px] h-[177px] relative overflow-hidden"
+            >
+              <div className="flex justify-between items-start">
+                <div className="flex items-center gap-2">
+                  <div className="text-[#60A5FA]">
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3ZM19 19H5V5H19V19ZM13.96 12.29L11.21 15.83L9.25 13.47L6.5 17H17.5L13.96 12.29Z"
+                        fill="#60A5FA"
+                      />
+                    </svg>
+                  </div>
+                  <span className="text-[#334155] text-[14px] font-semibold font-['DM Sans'] truncate max-w-[320px]">
+                    {image.name.length > 35
+                      ? image.name.substring(0, 32) + "..."
+                      : image.name}
+                  </span>
+                </div>
+                <button
+                  className="text-[#EF4444]"
+                  onClick={() =>
+                    setUploadedImages((prev) =>
+                      prev.filter((_, i) => i !== index),
+                    )
+                  }
+                >
+                  <Trash2
+                    size={24}
+                    className="text-[#EF4444] stroke-[1.5px] fill-none"
+                  />
+                </button>
+              </div>
+              <div className="absolute left-[44px] top-[40px]">
+                <img
+                  src={image.url}
+                  alt={image.name}
+                  className="max-w-[350px] max-h-[120px] object-contain bg-white p-1 rounded border border-[#E2E8F0]"
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
