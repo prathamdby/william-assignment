@@ -76,13 +76,13 @@ export function Calendar({ selectedDate, onDateSelect }: CalendarProps) {
         <div className="flex items-center gap-3">
           <button
             onClick={goToPreviousMonth}
-            className="p-1 hover:bg-gray-200 rounded"
+            className="p-1 hover:bg-slate-200 rounded"
           >
             <ChevronLeft className="w-4 h-4 text-[#64748B]" />
           </button>
           <button
             onClick={goToNextMonth}
-            className="p-1 hover:bg-gray-200 rounded"
+            className="p-1 hover:bg-slate-200 rounded"
           >
             <ChevronRight className="w-4 h-4 text-[#0F172A]" />
           </button>
@@ -118,7 +118,7 @@ export function Calendar({ selectedDate, onDateSelect }: CalendarProps) {
                   ? "bg-[#334155] text-white"
                   : isTodayDate
                     ? "bg-[#F1F5F9] text-[#334155]"
-                    : "text-[#334155] hover:bg-[#F1F5F9]"
+                    : "text-[#334155] hover:bg-slate-200"
               }`}
             >
               {index + 1}
