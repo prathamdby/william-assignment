@@ -6,6 +6,7 @@ import { MentorCard } from "@/components/MentorCard";
 import { MentorSearch } from "@/components/MentorSearch";
 import { NoResultsToast } from "@/components/ui/no-results-toast";
 import { ActiveFilters, FilterOption } from "@/components/ActiveFilters";
+import { Switch } from "@/components/ui/switch";
 
 // Sample mentor data
 const mentorsData = [
@@ -71,6 +72,8 @@ export default function MentorsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredMentors, setFilteredMentors] = useState(mentorsData);
   const [showNoResultsToast, setShowNoResultsToast] = useState(false);
+  const [isMentor, setIsMentor] = useState(false); // State to track if user is a mentor
+  const [switchChecked, setSwitchChecked] = useState(false);
 
   // State for active filters
   const [activeFilters, setActiveFilters] = useState<{
@@ -189,6 +192,12 @@ export default function MentorsPage() {
     setShowNoResultsToast(false);
   };
 
+  // Toggle mentor mode
+  const handleToggleMentorMode = (checked: boolean) => {
+    setSwitchChecked(checked);
+    // Additional logic for switching to mentor mode would go here
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
       <NoResultsToast show={showNoResultsToast} onHide={hideNoResultsToast} />
@@ -198,18 +207,26 @@ export default function MentorsPage() {
           <h1 className="text-2xl font-medium font-montserrat text-[#0F172A]">
             Mentors
           </h1>
-          <Button
-            className="text-sm font-medium bg-white border border-[#CBD5E1] rounded-[6px] text-[#334155] shadow-[0_1px_2px_rgba(15,23,42,0.05)] hover:bg-white hover:text-[#334155] hover:border-[#CBD5E1] focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none transition-none flex items-center justify-center"
-            style={{
-              paddingLeft: "16px",
-              paddingRight: "16px",
-              paddingTop: "6px",
-              paddingBottom: "6px",
-            }}
-            variant="ghost"
-          >
-            Become a mentor
-          </Button>
+
+          {isMentor ? (
+            <div className="bg-[#F8FAFC] rounded-[6px] px-3 py-2 flex items-center gap-2">
+              <span className="text-xs font-semibold font-['DM_Sans'] text-[#334155]">
+                Switch to Mentor
+              </span>
+              <Switch
+                checked={switchChecked}
+                onCheckedChange={handleToggleMentorMode}
+              />
+            </div>
+          ) : (
+            <Button
+              onClick={() => setIsMentor(true)}
+              className="h-8 px-4 py-2 text-xs font-semibold font-['DM_Sans'] bg-white border border-[#CBD5E1] rounded-[6px] text-[#334155] shadow-[0_1px_2px_rgba(15,23,42,0.05)] hover:bg-white hover:text-[#334155] hover:border-[#CBD5E1] focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none"
+              variant="ghost"
+            >
+              Become a mentor
+            </Button>
+          )}
         </div>
       </div>
 
