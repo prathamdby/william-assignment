@@ -214,17 +214,7 @@ export function MentorSearch({
         ratings: activeRatings,
       });
     }
-  }, [
-    roleFilters,
-    companyFilters,
-    slotFilter,
-    ratingFilter,
-    onFilterChange,
-    roleOptions,
-    companyOptions,
-    slotOptions,
-    ratingOptions,
-  ]);
+  }, [roleFilters, companyFilters, slotFilter, ratingFilter, onFilterChange]);
 
   // Handle role filter changes
   const handleRoleFilterChange = (value: string) => {
