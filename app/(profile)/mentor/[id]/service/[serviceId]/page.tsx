@@ -775,7 +775,7 @@ export default function ServiceDetailsPage({
             </div>
 
             {/* Timezone */}
-            <div className="mt-6 pb-6 border-b border-[#E2E8F0]">
+            <div className="mt-6">
               <h3 className="text-lg font-medium text-[#0F172A] mb-3">
                 Timezone
               </h3>
