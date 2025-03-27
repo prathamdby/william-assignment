@@ -22,7 +22,6 @@ export function UploadErrorToast({
       setIsVisible(true);
       setProgress(100);
 
-      // Set up progress animation with requestAnimationFrame for smoother animation
       let animationFrameId: number;
       const startTime = Date.now();
       const endTime = startTime + duration;
@@ -37,11 +36,10 @@ export function UploadErrorToast({
         if (newProgress > 0) {
           animationFrameId = requestAnimationFrame(animateProgress);
         } else {
-          // Only hide after progress is complete
           setTimeout(() => {
             setIsVisible(false);
             onHide();
-          }, 100); // Small delay to ensure the bar is fully complete
+          }, 100);
         }
       };
 

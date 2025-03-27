@@ -35,31 +35,24 @@ export function SidebarNav() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
-  // Check if we're on a profile page
   const isProfilePage = pathname.startsWith("/mentor/");
 
-  // Handle window resize to detect mobile view
   useEffect(() => {
     const checkIfMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
 
-    // Initial check
     checkIfMobile();
 
-    // Add event listener for window resize
     window.addEventListener("resize", checkIfMobile);
 
-    // Cleanup
     return () => window.removeEventListener("resize", checkIfMobile);
   }, []);
 
-  // Close mobile menu when route changes
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [pathname]);
 
-  // Mobile sidebar
   if (isMobile) {
     return (
       <>
@@ -81,7 +74,6 @@ export function SidebarNav() {
           <div className="pt-[87px]">
             <nav className="flex flex-col px-6 space-y-3">
               {navItems.map((item) => {
-                // Check if this is the Mentor tab and if we're on a mentor profile page
                 const isMentorTabAndProfilePage =
                   item.href === "/mentors" && pathname.startsWith("/mentor/");
 
@@ -129,7 +121,6 @@ export function SidebarNav() {
     );
   }
 
-  // Desktop sidebar - keep exactly as it was originally
   return (
     <div
       className={cn(
@@ -145,7 +136,6 @@ export function SidebarNav() {
           )}
         >
           {navItems.map((item, index) => {
-            // Check if this is the Mentor tab and if we're on a mentor profile page
             const isMentorTabAndProfilePage =
               item.href === "/mentors" && pathname.startsWith("/mentor/");
 
@@ -154,7 +144,6 @@ export function SidebarNav() {
               pathname.startsWith(item.href + "/") ||
               isMentorTabAndProfilePage;
 
-            // Add extra space after each item except the last one
             const extraSpaceClass =
               isProfilePage && index < navItems.length - 1 ? "mb-[9px]" : "";
 

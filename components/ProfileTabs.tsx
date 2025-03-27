@@ -61,7 +61,6 @@ export function ProfileTabs({
     }
   };
 
-  // Find the active tab label
   const activeTabLabel =
     tabs.find((tab) => tab.value === activeTab)?.label || tabs[0]?.label;
 

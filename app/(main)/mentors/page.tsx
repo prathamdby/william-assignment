@@ -8,7 +8,6 @@ import { NoResultsToast } from "@/components/ui/no-results-toast";
 import { ActiveFilters, FilterOption } from "@/components/ActiveFilters";
 import { Switch } from "@/components/ui/switch";
 
-// Sample mentor data
 const mentorsData = [
   {
     id: 1,
@@ -72,10 +71,9 @@ export default function MentorsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredMentors, setFilteredMentors] = useState(mentorsData);
   const [showNoResultsToast, setShowNoResultsToast] = useState(false);
-  const [isMentor, setIsMentor] = useState(false); // State to track if user is a mentor
+  const [isMentor, setIsMentor] = useState(false);
   const [switchChecked, setSwitchChecked] = useState(false);
 
-  // State for active filters
   const [activeFilters, setActiveFilters] = useState<{
     roles: FilterOption[];
     companies: FilterOption[];
@@ -88,11 +86,9 @@ export default function MentorsPage() {
     ratings: [],
   });
 
-  // Apply both search and filter criteria when either changes
   useEffect(() => {
     let filtered = mentorsData;
 
-    // Apply search term filter
     if (searchTerm && searchTerm.trim()) {
       const lowercaseSearchTerm = searchTerm.toLowerCase();
       filtered = filtered.filter(
@@ -104,13 +100,11 @@ export default function MentorsPage() {
       );
     }
 
-    // Apply role filters
     if (activeFilters.roles.length > 0) {
       const roleValues = activeFilters.roles.map((role) => role.value);
       filtered = filtered.filter((mentor) => roleValues.includes(mentor.role));
     }
 
-    // Apply company filters
     if (activeFilters.companies.length > 0) {
       const companyValues = activeFilters.companies.map(
         (company) => company.value,
@@ -120,15 +114,13 @@ export default function MentorsPage() {
       );
     }
 
-    // Apply slot filter
     if (activeFilters.slots.length > 0) {
-      const slotValue = activeFilters.slots[0].value; // Only one slot can be selected
+      const slotValue = activeFilters.slots[0].value;
       filtered = filtered.filter((mentor) => mentor.availability === slotValue);
     }
 
-    // Apply rating filter
     if (activeFilters.ratings.length > 0) {
-      const ratingValue = activeFilters.ratings[0].value; // Only one rating can be selected
+      const ratingValue = activeFilters.ratings[0].value;
       if (ratingValue === "high-to-low") {
         filtered = filtered.sort((a, b) => b.rating - a.rating);
       } else if (ratingValue === "low-to-high") {
@@ -136,7 +128,6 @@ export default function MentorsPage() {
       }
     }
 
-    // Show toast if no results found
     if (filtered.length === 0) {
       setShowNoResultsToast(true);
     } else {
@@ -146,12 +137,10 @@ export default function MentorsPage() {
     setFilteredMentors(filtered);
   }, [searchTerm, activeFilters]);
 
-  // Handle search from MentorSearch component
   const handleSearch = (term: string) => {
     setSearchTerm(term);
   };
 
-  // Handle filter changes from MentorSearch component
   const handleFilterChange = (filters: {
     roles: FilterOption[];
     companies: FilterOption[];
@@ -161,7 +150,6 @@ export default function MentorsPage() {
     setActiveFilters(filters);
   };
 
-  // Handle removing a filter tag
   const handleRemoveFilter = (filterType: string, value: string) => {
     setActiveFilters((prev) => {
       const newFilters = { ...prev };
@@ -187,15 +175,12 @@ export default function MentorsPage() {
     });
   };
 
-  // Hide the no results toast
   const hideNoResultsToast = () => {
     setShowNoResultsToast(false);
   };
 
-  // Toggle mentor mode
   const handleToggleMentorMode = (checked: boolean) => {
     setSwitchChecked(checked);
-    // Additional logic for switching to mentor mode would go here
   };
 
   return (

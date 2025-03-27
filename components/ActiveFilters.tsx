@@ -22,7 +22,6 @@ export function ActiveFilters({
   activeFilters,
   onRemoveFilter,
 }: ActiveFiltersProps) {
-  // Check if there are any active filters
   const hasActiveFilters =
     activeFilters.roles.length > 0 ||
     activeFilters.companies.length > 0 ||

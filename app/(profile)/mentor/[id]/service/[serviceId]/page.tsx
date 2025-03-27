@@ -17,7 +17,6 @@ import {
 import { Calendar as CalendarComponent } from "@/components/Calendar";
 import RichTextEditor from "@/components/RichTextEditor";
 
-// Mentor data interface
 interface MentorData {
   id: number;
   name: string;
@@ -33,7 +32,6 @@ interface MentorData {
   rating: number;
 }
 
-// Sample mentor data from mentors page
 const mentorsData: MentorData[] = [
   {
     id: 1,
@@ -93,7 +91,6 @@ const mentorsData: MentorData[] = [
   },
 ];
 
-// Get mentor data with proper typing
 const getMentorData = (
   id: string,
 ): (MentorData & { sessions: number; isServicesDisabled?: boolean }) | null => {
@@ -102,7 +99,7 @@ const getMentorData = (
   return {
     ...mentor,
     sessions: 20,
-    isServicesDisabled: parseInt(id) === 2, // Disable services for mentor ID 2
+    isServicesDisabled: parseInt(id) === 2,
   };
 };
 
@@ -110,7 +107,6 @@ interface AssistItem {
   text: string;
 }
 
-// Service type interfaces
 interface BaseService {
   id: number;
   title: string;
@@ -174,7 +170,6 @@ type Service =
   | WebinarService
   | DigitalProductService;
 
-// Type guards
 const isCallService = (service: Service): service is CallService =>
   service.type === "call";
 const isWebinarService = (service: Service): service is WebinarService =>
@@ -222,7 +217,6 @@ const timezones = [
   "(GMT - 7:00) Mountain Time (US & Canada)",
 ];
 
-// Service data from mentor page
 const services: Service[] = [
   {
     id: 1,
@@ -318,7 +312,6 @@ const services: Service[] = [
   },
 ];
 
-// Digital product
 const digitalProduct: DigitalProductService = {
   id: 6,
   title: "SQL Basics Cheat Sheet",
@@ -336,10 +329,8 @@ const digitalProduct: DigitalProductService = {
   amount: { value: "500" },
 };
 
-// Add digital product to services array for consistent indexing
 services.push(digitalProduct);
 
-// Function to get service by ID
 const getServiceById = (id: string): Service | undefined => {
   const serviceId = parseInt(id);
   return services.find((service) => service.id === serviceId);
@@ -360,7 +351,6 @@ export default function ServiceDetailsPage({
   const [questionContent, setQuestionContent] = useState<string>("");
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Handle click outside to close dropdown
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -377,13 +367,10 @@ export default function ServiceDetailsPage({
     };
   }, []);
 
-  // Get service data
   const service = getServiceById(params.serviceId);
 
-  // Get mentor data
   const mentorData = getMentorData(params.id);
 
-  // Show error if service not found
   if (!service) {
     return (
       <div className="min-h-screen bg-white flex flex-col items-center justify-center">
@@ -402,7 +389,6 @@ export default function ServiceDetailsPage({
     );
   }
 
-  // Show error if mentor not found
   if (!mentorData) {
     return (
       <div className="min-h-screen bg-white flex flex-col items-center justify-center">

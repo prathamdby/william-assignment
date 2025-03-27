@@ -39,7 +39,6 @@ interface MentorData {
   sessions?: number;
 }
 
-// Sample mentor data from mentors page
 const mentorsData: MentorData[] = [
   {
     id: 1,
@@ -99,7 +98,6 @@ const mentorsData: MentorData[] = [
   },
 ];
 
-// Get mentor data with proper typing
 const getMentorData = (
   id: string,
 ): (MentorData & { sessions: number; isServicesDisabled?: boolean }) | null => {
@@ -108,7 +106,7 @@ const getMentorData = (
   return {
     ...mentor,
     sessions: 20,
-    isServicesDisabled: parseInt(id) === 2, // Disable services for mentor ID 2
+    isServicesDisabled: parseInt(id) === 2,
   };
 };
 
@@ -121,7 +119,6 @@ const profileTabs = [
   { label: "Digital product", value: "product" },
 ];
 
-// Sample services data
 const services = [
   {
     id: 1,
@@ -217,7 +214,6 @@ const services = [
   },
 ];
 
-// Digital product
 const digitalProduct = {
   id: 6,
   title: "SQL Basics Cheat Sheet",
@@ -231,7 +227,6 @@ const digitalProduct = {
   amount: "500",
 };
 
-// Sample reviews data
 const reviewsData = [
   {
     id: 1,

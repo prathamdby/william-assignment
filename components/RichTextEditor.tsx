@@ -36,7 +36,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-// Define the type for heading levels
 type Level = 1 | 2 | 3 | 4 | 5 | 6;
 
 interface RichTextEditorProps {
@@ -64,14 +63,12 @@ const RichTextEditor = ({
     }>
   >([]);
 
-  // Add state for the toast
   const [showUploadFailToast, setShowUploadFailToast] = useState(false);
 
-  // Initialize TipTap editor
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
-        heading: false, // We configure it separately below
+        heading: false,
       }),
       Heading.configure({
         levels: [1, 2, 3, 4, 5, 6],
@@ -108,7 +105,6 @@ const RichTextEditor = ({
     autofocus: "end",
   });
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -125,22 +121,18 @@ const RichTextEditor = ({
     };
   }, []);
 
-  // Handle heading selection
   const handleHeadingChange = (level: Level) => {
     editor?.chain().focus().toggleHeading({ level }).run();
     setCurrentHeadingLevel(level);
     setShowHeadingDropdown(false);
   };
 
-  // Format heading display text
   const getHeadingText = () => {
     return `Heading ${currentHeadingLevel}`;
   };
 
-  // Add custom CSS for the editor
   useEffect(() => {
     if (editor) {
-      // Add custom styles to editor
       const style = document.createElement("style");
       style.innerHTML = `
         .ProseMirror {
@@ -420,34 +412,26 @@ const RichTextEditor = ({
     return null;
   }
 
-  // Handle image insertion
   const handleImageInsert = () => {
     const input = document.createElement("input");
     input.type = "file";
     input.accept = "image/*";
-    input.multiple = true; // Allow multiple file selection
+    input.multiple = true;
 
     input.onchange = (event) => {
       const files = (event.target as HTMLInputElement).files;
       if (files && files.length > 0) {
-        // Check if adding these files would exceed the limit
         if (uploadedImages.length + files.length > 3) {
-          // Show failure toast
           setShowUploadFailToast(true);
           return;
         }
 
-        // Process all selected files
         const newImages = Array.from(files).map((file) => {
-          // Create a URL for each uploaded image
           const imageUrl = URL.createObjectURL(file);
 
-          // Process filename - use a more readable name if it's too long
           let fileName = file.name;
 
-          // If it's a very long filename or URL, create a more readable name
           if (fileName.length > 50) {
-            // Try to extract a more reasonable filename
             const extension = fileName.split(".").pop() || "";
             fileName = `image_${Date.now()}.${extension}`;
           }
@@ -458,7 +442,6 @@ const RichTextEditor = ({
           };
         });
 
-        // Add all new images to the list
         setUploadedImages((prev) => [...prev, ...newImages]);
       }
     };
@@ -466,7 +449,6 @@ const RichTextEditor = ({
     input.click();
   };
 
-  // Handle link insertion
   const handleLinkInsert = () => {
     const url = window.prompt("Enter URL");
     if (url) {
@@ -474,17 +456,14 @@ const RichTextEditor = ({
     }
   };
 
-  // Handle video insertion
   const handleVideoInsert = () => {
     const url = window.prompt("Enter video URL (YouTube, Vimeo, etc.)");
     if (!url) return;
 
-    // Extract video ID from YouTube URL
     let videoId = "";
     let embedHtml = "";
 
     if (url.includes("youtube.com") || url.includes("youtu.be")) {
-      // Handle YouTube URLs
       if (url.includes("youtube.com/watch?v=")) {
         videoId = url.split("v=")[1].split("&")[0];
       } else if (url.includes("youtu.be/")) {
@@ -503,7 +482,6 @@ const RichTextEditor = ({
         </div>`;
       }
     } else if (url.includes("vimeo.com")) {
-      // Handle Vimeo URLs
       const vimeoId = url.split("vimeo.com/")[1].split("?")[0];
       if (vimeoId) {
         embedHtml = `<div class="video-embed" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; border-radius: 4px;">
@@ -517,7 +495,6 @@ const RichTextEditor = ({
         </div>`;
       }
     } else {
-      // For other URLs, create a simple video element
       embedHtml = `<div class="video-embed" style="max-width: 100%; border-radius: 4px;">
         <video controls style="width: 100%; max-height: 400px; border-radius: 4px;">
           <source src="${url}" type="video/mp4">
@@ -535,7 +512,6 @@ const RichTextEditor = ({
     }
   };
 
-  // Simple emoji picker for demo
   const handleEmojiInsert = () => {
     const emojis = ["😊", "👍", "🎉", "❤️", "🔥", "⭐", "🙌", "👏", "🤔", "😂"];
     const container = document.createElement("div");
@@ -558,7 +534,6 @@ const RichTextEditor = ({
       container.appendChild(button);
     });
 
-    // Position near the cursor
     container.style.position = "absolute";
     container.style.zIndex = "1000";
     container.style.background = "white";
@@ -573,7 +548,6 @@ const RichTextEditor = ({
 
     document.body.appendChild(container);
 
-    // Close on click outside
     const closeOnClickOutside = (e: MouseEvent) => {
       if (!container.contains(e.target as Node)) {
         document.body.removeChild(container);
@@ -584,7 +558,6 @@ const RichTextEditor = ({
     document.addEventListener("mousedown", closeOnClickOutside);
   };
 
-  // Toolbar buttons configuration for reusability
   const toolbarButtons = [
     {
       icon: <BoldIcon className="w-5 h-5" />,

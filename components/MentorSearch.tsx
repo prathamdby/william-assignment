@@ -20,7 +20,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { FilterOption } from "./ActiveFilters";
 
-// Role options for filter
 const roleOptions = [
   { id: 1, label: "SE/SDE", value: "se-sde" },
   { id: 2, label: "DS/AI/ML", value: "ds-ai-ml" },
@@ -30,7 +29,6 @@ const roleOptions = [
   { id: 6, label: "Quantitative Finance", value: "quantitative-finance" },
 ];
 
-// Company options for filter
 const companyOptions = [
   { id: 1, label: "FAANG", value: "faang" },
   { id: 2, label: "Startups", value: "startups" },
@@ -38,20 +36,17 @@ const companyOptions = [
   { id: 4, label: "Others", value: "others" },
 ];
 
-// Slot options for filter
 const slotOptions = [
   { id: 1, label: "This week", value: "this-week" },
   { id: 2, label: "Next week", value: "next-week" },
   { id: 3, label: "Anytime", value: "anytime" },
 ];
 
-// Rating options for filter
 const ratingOptions = [
   { id: 1, label: "Low to high", value: "low-to-high" },
   { id: 2, label: "High to low", value: "high-to-low" },
 ];
 
-// Add back the trendingSearches array
 const trendingSearches = [
   { id: 1, label: "Microsoft" },
   { id: 2, label: "Slack" },
@@ -75,7 +70,6 @@ interface MentorSearchProps {
   };
 }
 
-// Mock mentor data for suggestions - in a real app, this would come from API or props
 const searchSuggestions = [
   "Google",
   "Microsoft",
@@ -105,39 +99,32 @@ export function MentorSearch({
   const searchRef = useRef<HTMLDivElement>(null);
   const [showNoResultsToast, setShowNoResultsToast] = useState(false);
 
-  // Filter states
   const [roleFilters, setRoleFilters] = useState<string[]>([]);
   const [companyFilters, setCompanyFilters] = useState<string[]>([]);
   const [slotFilter, setSlotFilter] = useState<string>("");
   const [ratingFilter, setRatingFilter] = useState<string>("");
 
-  // Slide-up filter panel state
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
 
-  // Dropdown states for desktop filters
   const [isRoleOpen, setIsRoleOpen] = useState(false);
   const [isCompanyOpen, setIsCompanyOpen] = useState(false);
   const [isSlotOpen, setIsSlotOpen] = useState(false);
   const [isRatingOpen, setIsRatingOpen] = useState(false);
 
-  // Update internal filters when activeFilters changes from parent
   useEffect(() => {
     if (!activeFilters) return;
 
-    // Helper to check if arrays are different regardless of order
     const areArraysDifferent = (a: string[], b: string[]) => {
       if (a.length !== b.length) return true;
       const setA = new Set(a);
       return b.some((item) => !setA.has(item));
     };
 
-    // Update role filters
     const activeRoleValues = activeFilters.roles.map((role) => role.value);
     if (areArraysDifferent(activeRoleValues, roleFilters)) {
       setRoleFilters(activeRoleValues);
     }
 
-    // Update company filters
     const activeCompanyValues = activeFilters.companies.map(
       (company) => company.value,
     );
@@ -145,14 +132,12 @@ export function MentorSearch({
       setCompanyFilters(activeCompanyValues);
     }
 
-    // Update slot filter
     const activeSlotValue =
       activeFilters.slots.length > 0 ? activeFilters.slots[0].value : "";
     if (activeSlotValue !== slotFilter) {
       setSlotFilter(activeSlotValue);
     }
 
-    // Update rating filter
     const activeRatingValue =
       activeFilters.ratings.length > 0 ? activeFilters.ratings[0].value : "";
     if (activeRatingValue !== ratingFilter) {
@@ -160,7 +145,6 @@ export function MentorSearch({
     }
   }, [activeFilters, roleFilters, companyFilters, slotFilter, ratingFilter]);
 
-  // Ref to track previous filters for comparison
   const prevFiltersRef = useRef({
     roles: [] as string[],
     companies: [] as string[],
@@ -168,7 +152,6 @@ export function MentorSearch({
     rating: "",
   });
 
-  // Update parent component when filters change (with safeguard against infinite updates)
   useEffect(() => {
     if (!onFilterChange) return;
 
@@ -179,7 +162,6 @@ export function MentorSearch({
       rating: ratingFilter,
     };
 
-    // Check if filters have actually changed from last time we called onFilterChange
     const prevFilters = prevFiltersRef.current;
     const haveFiltersChanged =
       JSON.stringify(prevFilters.roles) !==
@@ -189,9 +171,7 @@ export function MentorSearch({
       prevFilters.slot !== currentFilters.slot ||
       prevFilters.rating !== currentFilters.rating;
 
-    // Only update if filters have changed from our last update to parent
     if (haveFiltersChanged) {
-      // Update ref with current values
       prevFiltersRef.current = currentFilters;
 
       const activeRoles = roleOptions.filter((role) =>
@@ -216,7 +196,6 @@ export function MentorSearch({
     }
   }, [roleFilters, companyFilters, slotFilter, ratingFilter, onFilterChange]);
 
-  // Handle role filter changes
   const handleRoleFilterChange = (value: string) => {
     setRoleFilters((prev) => {
       if (prev.includes(value)) {
@@ -227,7 +206,6 @@ export function MentorSearch({
     });
   };
 
-  // Handle company filter changes
   const handleCompanyFilterChange = (value: string) => {
     setCompanyFilters((prev) => {
       if (prev.includes(value)) {
@@ -238,17 +216,14 @@ export function MentorSearch({
     });
   };
 
-  // Handle slot filter changes (radio button)
   const handleSlotFilterChange = (value: string) => {
     setSlotFilter((prev) => (prev === value ? "" : value));
   };
 
-  // Handle rating filter changes (radio button)
   const handleRatingFilterChange = (value: string) => {
     setRatingFilter((prev) => (prev === value ? "" : value));
   };
 
-  // Close search suggestions when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -290,13 +265,11 @@ export function MentorSearch({
   };
 
   const addRecentSearch = (term: string) => {
-    // Only add if it doesn't already exist
     if (
       !recentSearches.some(
         (search) => search.label.toLowerCase() === term.toLowerCase(),
       )
     ) {
-      // Add to recent searches, limiting to 5 most recent
       setRecentSearches((prev) => [
         { id: Date.now(), label: term },
         ...prev.slice(0, 4),
@@ -312,14 +285,12 @@ export function MentorSearch({
     setRecentSearches((prev) => prev.filter((item) => item.id !== id));
   };
 
-  // Count active filters to display on the filter button
   const activeFilterCount =
     (roleFilters.length || 0) +
     (companyFilters.length || 0) +
     (slotFilter ? 1 : 0) +
     (ratingFilter ? 1 : 0);
 
-  // Reset all filters
   const resetAllFilters = () => {
     setRoleFilters([]);
     setCompanyFilters([]);
@@ -327,17 +298,14 @@ export function MentorSearch({
     setRatingFilter("");
   };
 
-  // Apply filters and close the panel
   const applyFilters = () => {
     setIsFilterPanelOpen(false);
   };
 
-  // Function to hide no results toast
   const hideNoResultsToast = () => {
     setShowNoResultsToast(false);
   };
 
-  // Filter search suggestions based on input
   const filteredSuggestions = useMemo(() => {
     if (!searchValue.trim()) return [];
 
@@ -348,7 +316,7 @@ export function MentorSearch({
           suggestion.toLowerCase().includes(lowerCaseSearch) &&
           suggestion.toLowerCase() !== lowerCaseSearch,
       )
-      .slice(0, 6); // Limit to 6 suggestions
+      .slice(0, 6);
   }, [searchValue]);
 
   return (
@@ -664,8 +632,6 @@ export function MentorSearch({
     </>
   );
 }
-
-// Add back the original desktop filter components
 
 interface RoleFilterButtonProps {
   roleFilters: string[];
