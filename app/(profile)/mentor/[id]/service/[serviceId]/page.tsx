@@ -481,7 +481,7 @@ export default function ServiceDetailsPage({
             <span className="text-[#64748B]">Back</span>
           </Link>
 
-          <div className="px-4 md:px-6 lg:px-[113px]">
+          <div className="px-4 mt-12 sm:mt-0 md:px-6 lg:px-[113px]">
             {/* Mentor name with verification icon - aligned in the same line as back button */}
             <div className="flex items-center gap-2 mt-8 sm:mt-0">
               <h1 className="text-xl font-semibold text-[#0F172A]">
