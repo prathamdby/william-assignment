@@ -720,14 +720,14 @@ export default function ServiceDetailsPage({
           <div className="w-full rounded-xl border border-[#CBD5E1] shadow-[0_4px_6px_0_rgba(0,0,0,0.05)] p-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-8">
               {/* Date picker */}
-              <div>
+              <div className="flex flex-col h-full">
                 <div className="flex items-center gap-2 mb-2">
                   <Calendar className="w-5 h-5 text-[#3B82F6]" />
                   <span className="text-lg font-medium text-[#64748B]">
                     Date
                   </span>
                 </div>
-                <div className="rounded-lg overflow-hidden">
+                <div className="flex-1 rounded-lg overflow-hidden">
                   <CalendarComponent
                     selectedDate={selectedDate}
                     onDateSelect={setSelectedDate}
@@ -736,14 +736,14 @@ export default function ServiceDetailsPage({
               </div>
 
               {/* Time slots */}
-              <div>
+              <div className="flex flex-col h-full">
                 <div className="flex items-center gap-2 mb-2">
                   <Clock className="w-5 h-5 text-[#3B82F6]" />
                   <span className="text-lg font-medium text-[#64748B]">
                     Time
                   </span>
                 </div>
-                <div className="p-4 border border-[#E2E8F0] rounded-lg bg-[#F8FAFC]">
+                <div className="flex-1 p-4 border border-[#E2E8F0] rounded-lg bg-[#F8FAFC]">
                   <div className="flex items-center gap-2 mb-4">
                     <span className="text-sm font-medium text-[#0F172A]">
                       {formatDate(selectedDate)}
