@@ -158,7 +158,7 @@ export function MentorSearch({
     if (activeRatingValue !== ratingFilter) {
       setRatingFilter(activeRatingValue);
     }
-  }, [activeFilters]);
+  }, [activeFilters, roleFilters, companyFilters, slotFilter, ratingFilter]);
 
   // Ref to track previous filters for comparison
   const prevFiltersRef = useRef({
