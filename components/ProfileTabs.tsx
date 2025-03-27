@@ -2,6 +2,13 @@
 
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ChevronDown } from "lucide-react";
 
 interface TabProps {
   label: string;
@@ -54,27 +61,60 @@ export function ProfileTabs({
     }
   };
 
+  // Find the active tab label
+  const activeTabLabel =
+    tabs.find((tab) => tab.value === activeTab)?.label || tabs[0]?.label;
+
   return (
     <div className="w-full">
-      <div
-        className="flex"
-        style={{
-          backgroundColor: "#F1F5F9",
-          padding: "4px 6px",
-          gap: "8px",
-          borderRadius: "8px",
-          width: "max-content",
-        }}
-      >
-        {tabs.map((tab) => (
-          <Tab
-            key={tab.value}
-            label={tab.label}
-            value={tab.value}
-            isActive={activeTab === tab.value}
-            onClick={handleTabChange}
-          />
-        ))}
+      {/* Mobile Dropdown */}
+      <div className="sm:hidden w-full">
+        <DropdownMenu>
+          <DropdownMenuTrigger className="w-full flex items-center justify-between px-4 py-2 bg-[#F1F5F9] text-[#334155] rounded-lg">
+            <span className="text-sm font-medium">{activeTabLabel}</span>
+            <ChevronDown className="h-4 w-4 text-[#64748B]" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-[200px]">
+            {tabs.map((tab) => (
+              <DropdownMenuItem
+                key={tab.value}
+                onClick={() => handleTabChange(tab.value)}
+                className={cn(
+                  "text-sm",
+                  activeTab === tab.value
+                    ? "bg-[#F1F5F9] text-[#334155]"
+                    : "text-[#64748B]",
+                )}
+              >
+                {tab.label}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+
+      {/* Desktop Tabs */}
+      <div className="hidden sm:block">
+        <div
+          className="flex"
+          style={{
+            backgroundColor: "#F1F5F9",
+            padding: "4px 6px",
+            gap: "8px",
+            borderRadius: "8px",
+            width: "max-content",
+          }}
+        >
+          {tabs.map((tab) => (
+            <Tab
+              key={tab.value}
+              label={tab.label}
+              value={tab.value}
+              isActive={activeTab === tab.value}
+              onClick={handleTabChange}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

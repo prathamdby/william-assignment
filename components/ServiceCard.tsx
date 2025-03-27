@@ -55,13 +55,15 @@ export function ServiceCard({
   replies,
 }: ServiceCardProps) {
   return (
-    <div className="w-full rounded-xl border border-[#CBD5E1] shadow-[0_4px_6px_0_rgba(0,0,0,0.05)] p-6">
+    <div className="w-full rounded-xl border border-[#CBD5E1] shadow-[0_4px_6px_0_rgba(0,0,0,0.05)] p-4 sm:p-6">
       <div className="flex flex-col gap-2">
-        <div className="flex justify-between items-start">
-          <h3 className="text-xl font-semibold text-[#334155]">{title}</h3>
+        <div className="flex flex-col sm:flex-row justify-between items-start gap-2 sm:gap-0">
+          <h3 className="text-xl font-semibold text-[#334155] break-words">
+            {title}
+          </h3>
           <Link
             href={`/mentor/${mentorId}/service/${id}`}
-            className="h-8 px-3 py-1.5 bg-[#334155] text-white text-xs font-semibold rounded-md hover:opacity-90"
+            className="w-full sm:w-auto h-8 px-3 py-1.5 bg-[#334155] text-white text-xs font-semibold rounded-md hover:opacity-90 text-center sm:text-left"
           >
             View Details
           </Link>
@@ -71,7 +73,7 @@ export function ServiceCard({
           {serviceType.details ? (
             <HoverCard>
               <HoverCardTrigger asChild>
-                <p className="text-sm w-max text-[#334155] cursor-pointer">
+                <p className="text-sm w-full text-[#334155] cursor-pointer break-words">
                   {description}
                 </p>
               </HoverCardTrigger>
@@ -87,10 +89,10 @@ export function ServiceCard({
                         key={index}
                         className="flex items-center gap-1.5 p-[6px] hover:bg-[#F8FAFC] rounded-[4px]"
                       >
-                        <div className="w-4 h-4 text-[#3B82F6]">
+                        <div className="w-4 h-4 text-[#3B82F6] shrink-0">
                           {detail.icon}
                         </div>
-                        <span className="text-xs font-medium text-[#64748B] font-['DM_Sans'] leading-[1.302em]">
+                        <span className="text-xs font-medium text-[#64748B] font-['DM_Sans'] leading-[1.302em] break-words">
                           {detail.label}
                         </span>
                       </div>
@@ -101,21 +103,21 @@ export function ServiceCard({
               </HoverCardContent>
             </HoverCard>
           ) : (
-            <p className="text-sm text-[#334155]">{description}</p>
+            <p className="text-sm text-[#334155] break-words">{description}</p>
           )}
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-col sm:flex-row items-stretch gap-4 sm:gap-2 w-full">
           <HoverCard>
             <HoverCardTrigger asChild>
-              <div className="flex-1 bg-[#EEF2FF] rounded p-3 cursor-pointer">
+              <div className="flex-1 bg-[#EEF2FF] rounded p-3 cursor-pointer min-w-0">
                 <div className="flex flex-col gap-2">
                   <p className="text-sm text-[#64748B] font-medium">
                     Service type
                   </p>
                   <div className="flex items-center gap-1">
-                    {serviceType.icon}
-                    <span className="text-sm font-semibold text-[#334155]">
+                    <div className="shrink-0">{serviceType.icon}</div>
+                    <span className="text-sm font-semibold text-[#334155] break-words">
                       {serviceType.label}
                     </span>
                   </div>
@@ -132,10 +134,10 @@ export function ServiceCard({
                           key={index}
                           className="flex items-center gap-1.5 p-[6px] hover:bg-[#F8FAFC] rounded-[4px]"
                         >
-                          <div className="w-4 h-4 text-[#3B82F6]">
+                          <div className="w-4 h-4 text-[#3B82F6] shrink-0">
                             {detail.icon}
                           </div>
-                          <span className="text-xs font-medium text-[#64748B] font-['DM_Sans'] leading-[1.302em]">
+                          <span className="text-xs font-medium text-[#64748B] font-['DM_Sans'] leading-[1.302em] break-words">
                             {detail.label}
                           </span>
                         </div>
@@ -150,15 +152,17 @@ export function ServiceCard({
 
           {(duration || date) && (
             <>
-              <div className="h-full border-r border-[#E2E8F0]"></div>
-              <div className="flex-1 bg-[#EEF2FF] rounded p-3">
+              <div className="hidden sm:block h-full border-r border-[#E2E8F0]"></div>
+              <div className="flex-1 bg-[#EEF2FF] rounded p-3 min-w-0">
                 <div className="flex flex-col gap-2">
                   <p className="text-sm text-[#64748B] font-medium">
                     {duration ? "Duration" : "Date"}
                   </p>
                   <div className="flex items-center gap-1">
-                    {duration?.icon || date?.icon}
-                    <span className="text-sm font-semibold text-[#334155]">
+                    <div className="shrink-0">
+                      {duration?.icon || date?.icon}
+                    </div>
+                    <span className="text-sm font-semibold text-[#334155] break-words">
                       {duration?.label || date?.label}
                     </span>
                   </div>
@@ -169,13 +173,13 @@ export function ServiceCard({
 
           {replies && (
             <>
-              <div className="h-full border-r border-[#E2E8F0]"></div>
-              <div className="flex-1 bg-[#EEF2FF] rounded p-3">
+              <div className="hidden sm:block h-full border-r border-[#E2E8F0]"></div>
+              <div className="flex-1 bg-[#EEF2FF] rounded p-3 min-w-0">
                 <div className="flex flex-col gap-2">
                   <p className="text-sm text-[#64748B] font-medium">Replies</p>
                   <div className="flex items-center gap-1">
-                    {replies.icon}
-                    <span className="text-sm font-semibold text-[#334155]">
+                    <div className="shrink-0">{replies.icon}</div>
+                    <span className="text-sm font-semibold text-[#334155] break-words">
                       {replies.label}
                     </span>
                   </div>
@@ -184,13 +188,13 @@ export function ServiceCard({
             </>
           )}
 
-          <div className="h-full border-r border-[#E2E8F0]"></div>
-          <div className="flex-1 bg-[#EEF2FF] rounded p-3">
+          <div className="hidden sm:block h-full border-r border-[#E2E8F0]"></div>
+          <div className="flex-1 bg-[#EEF2FF] rounded p-3 min-w-0">
             <div className="flex flex-col gap-2">
               <p className="text-sm text-[#64748B] font-medium">Amount</p>
               <div className="flex items-center gap-1">
-                <IndianRupee className="w-4 h-4 text-[#00C16A]" />
-                <span className="text-sm font-semibold text-[#334155]">
+                <IndianRupee className="w-4 h-4 text-[#00C16A] shrink-0" />
+                <span className="text-sm font-semibold text-[#334155] break-words">
                   {amount.value}
                 </span>
               </div>

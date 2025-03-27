@@ -287,19 +287,21 @@ export default function MentorProfilePage({
   }
 
   return (
-    <div className="flex flex-col relative">
+    <div className="flex flex-col relative w-screen max-w-full sm:w-full overflow-x-hidden sm:overflow-x-visible">
       {/* Back button */}
-      <Link
-        href="/mentors"
-        className="flex items-center gap-2 absolute top-6 left-2"
-      >
-        <ArrowLeft className="w-5 h-5 text-[#94A3B8]" />
-        <span className="text-sm text-[#64748B]">Back</span>
-      </Link>
+      <div className="relative py-6">
+        <Link
+          href="/mentors"
+          className="absolute top-6 left-4 flex items-center gap-2 text-sm sm:left-2"
+        >
+          <ArrowLeft className="w-5 h-5 text-[#94A3B8]" />
+          <span className="text-sm text-[#64748B]">Back</span>
+        </Link>
+      </div>
       {/* Profile section */}
-      <div className="px-[113px] py-6 flex justify-center items-start gap-6 mx-auto border-b border-[#E2E8F0]">
+      <div className="px-4 sm:px-6 lg:px-[113px] pb-6 flex flex-col lg:flex-row justify-center items-start gap-6 mx-auto border-b border-[#E2E8F0] w-full">
         {/* Profile image and reviews */}
-        <div className="relative w-[184px] h-[184px] rounded-lg overflow-hidden">
+        <div className="relative w-full lg:w-[184px] h-[184px] rounded-lg overflow-hidden shrink-0 mt-8 sm:mt-0">
           <Image
             src={mentorData.imgSrc}
             alt={mentorData.name}
@@ -326,22 +328,22 @@ export default function MentorProfilePage({
         </div>
 
         {/* Profile info */}
-        <div className="flex-1 flex flex-col gap-3">
-          <div className="flex justify-between">
+        <div className="flex-1 flex flex-col gap-3 w-full min-w-0">
+          <div className="flex flex-col sm:flex-row justify-between gap-4">
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-2">
-                <h1 className="text-xl font-semibold text-[#334155]">
+                <h1 className="text-xl font-semibold text-[#334155] break-words">
                   {mentorData.name}
                 </h1>
                 {mentorData.isVerified && (
-                  <ShieldCheckIcon className="w-5 h-5 text-[#00C16A]" />
+                  <ShieldCheckIcon className="w-5 h-5 text-[#00C16A] shrink-0" />
                 )}
               </div>
-              <p className="text-lg text-[#334155]">
+              <p className="text-lg text-[#334155] break-words">
                 {mentorData.title} at {mentorData.company}
               </p>
             </div>
-            <div className="flex flex-col items-end gap-4">
+            <div className="flex flex-row sm:flex-col items-start sm:items-end gap-4 shrink-0">
               <div className="px-2 py-1 bg-[#E5E7EB] rounded text-xs font-semibold text-[#0F172A]">
                 {mentorData.sessions} Sessions
               </div>
@@ -382,30 +384,34 @@ export default function MentorProfilePage({
           </div>
 
           {/* Bio */}
-          <div className="p-3 bg-[#F1F5F9] w-full min-w-[730px] rounded-md">
-            <p className="text-sm text-[#334155]">{mentorData.bio}</p>
+          <div className="p-3 bg-[#F1F5F9] w-full rounded-md">
+            <p className="text-sm text-[#334155] break-words">
+              {mentorData.bio}
+            </p>
           </div>
         </div>
       </div>
 
       {/* Services section heading */}
-      <div className="px-[113px] pt-4 pb-4">
+      <div className="px-4 sm:px-6 lg:px-[113px] py-6">
         <h2 className="text-2xl font-medium text-[#0F172A]">Services</h2>
       </div>
 
       {/* Tabs - Only show if services are not disabled */}
       {!mentorData.isServicesDisabled && (
-        <div className="px-[113px] mb-6">
-          <ProfileTabs
-            tabs={profileTabs}
-            defaultTab="all"
-            onChange={setActiveTab}
-          />
+        <div className="px-4 sm:px-6 lg:px-[113px] mb-6 overflow-x-auto">
+          <div className="min-w-max">
+            <ProfileTabs
+              tabs={profileTabs}
+              defaultTab="all"
+              onChange={setActiveTab}
+            />
+          </div>
         </div>
       )}
 
       {/* Services content */}
-      <div className="px-[113px] py-6 border-b border-[#E2E8F0]">
+      <div className="px-4 sm:px-6 lg:px-[113px] py-6 border-b border-[#E2E8F0] w-full">
         {mentorData.isServicesDisabled ? (
           <div className="flex flex-col items-center justify-center py-16">
             <div className="flex flex-col items-center gap-6">
@@ -437,8 +443,8 @@ export default function MentorProfilePage({
         ) : (
           <>
             {activeTab === "all" && (
-              <div className="flex flex-col gap-8">
-                <div className="grid grid-cols-2 gap-8">
+              <div className="flex flex-col gap-8 w-full">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full">
                   {services.slice(0, 2).map((service) => (
                     <ServiceCard
                       key={service.id}
@@ -454,7 +460,7 @@ export default function MentorProfilePage({
                     />
                   ))}
                 </div>
-                <div className="grid grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full">
                   <div className="flex flex-col gap-8">
                     {services.slice(2, 4).map((service) => (
                       <ServiceCard
@@ -484,7 +490,7 @@ export default function MentorProfilePage({
             )}
 
             {activeTab === "call" && (
-              <div className="grid grid-cols-2 gap-8">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full">
                 {services
                   .filter((service) => service.type === "call")
                   .map((service) => (
@@ -505,7 +511,7 @@ export default function MentorProfilePage({
             )}
 
             {activeTab === "dm" && (
-              <div className="grid grid-cols-2 gap-8">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full">
                 {services
                   .filter((service) => service.type === "dm")
                   .map((service) => (
@@ -526,7 +532,7 @@ export default function MentorProfilePage({
             )}
 
             {activeTab === "package" && (
-              <div className="grid grid-cols-2 gap-8">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full">
                 {services
                   .filter((service) => service.type === "package")
                   .map((service) => (
@@ -547,7 +553,7 @@ export default function MentorProfilePage({
             )}
 
             {activeTab === "webinar" && (
-              <div className="grid grid-cols-2 gap-8">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full">
                 {services
                   .filter((service) => service.type === "webinar")
                   .map((service) => (
@@ -568,7 +574,7 @@ export default function MentorProfilePage({
             )}
 
             {activeTab === "product" && (
-              <div className="grid grid-cols-2 gap-8">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full">
                 <ProductCard
                   title={digitalProduct.title}
                   description={digitalProduct.description}
@@ -584,13 +590,13 @@ export default function MentorProfilePage({
       </div>
 
       {/* Reviews section */}
-      <div className="px-[106px] pt-4">
+      <div className="px-4 sm:px-6 lg:px-[106px] pt-4 w-full">
         <h2 className="text-2xl font-medium text-[#0F172A] font-montserrat">
           Reviews
         </h2>
       </div>
 
-      <div className="px-[106px] py-4 flex items-center gap-3 text-[#64748B]">
+      <div className="px-4 sm:px-6 lg:px-[106px] py-4 flex items-center gap-3 text-[#64748B] w-full">
         <span className="font-semibold text-base">
           {reviewsData.length} Reviews
         </span>
@@ -599,11 +605,13 @@ export default function MentorProfilePage({
           <span className="font-semibold text-base">
             {mentorData.rating.toFixed(1)}
           </span>
-          <Image src="/images/star.svg" alt="Star" width={16} height={16} />
+          <div className="shrink-0">
+            <Image src="/images/star.svg" alt="Star" width={16} height={16} />
+          </div>
         </div>
       </div>
 
-      <div className="px-[106px] pb-12 flex flex-col gap-4 mt-8">
+      <div className="px-4 sm:px-6 lg:px-[106px] pb-12 flex flex-col gap-4 mt-8 w-full max-w-full">
         {reviewsData.map((review) => (
           <ReviewCard
             key={review.id}
