@@ -286,7 +286,7 @@ export default function MentorProfilePage({
   return (
     <div className="flex flex-col relative w-screen max-w-full sm:w-full overflow-x-hidden sm:overflow-x-visible">
       {/* Back button */}
-      <div className="relative pb-6">
+      <div className="relative pt-6 sm:pt-0 pb-6">
         <Link
           href="/mentors"
           className="absolute top-6 left-4 flex items-center gap-2 text-sm sm:left-2"
