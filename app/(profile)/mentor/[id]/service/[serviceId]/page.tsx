@@ -749,7 +749,7 @@ export default function ServiceDetailsPage({
                       {formatDate(selectedDate)}
                     </span>
                   </div>
-                  <div className="grid grid-cols-1 xs:grid-cols-2 gap-3">
+                  <div className="grid grid-cols-2 gap-x-3 gap-y-3">
                     {timeSlots.map((time, index) => {
                       const isSelected = selectedTimeSlot === time;
                       const isFirst = time === "6:00 - 6:30PM";
