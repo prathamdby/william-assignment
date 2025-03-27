@@ -108,11 +108,6 @@ const config = {
         "accordion-up": "accordion-up 0.2s ease-out",
         "fade-in-down": "fade-in-down 0.3s ease-out",
       },
-      fontFamily: {
-        sans: ["var(--font-sans)"],
-        montserrat: ["Montserrat", "sans-serif"],
-        "dm-sans": ["DM Sans", "sans-serif"],
-      },
     },
   },
   plugins: [require("tailwindcss-animate")],
