@@ -1,18 +1,12 @@
 import type { Metadata } from "next";
-import { Inter as FontSans } from "next/font/google";
-import { Montserrat } from "next/font/google";
+import { DM_Sans as FontSans } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
 const fontSans = FontSans({
   subsets: ["latin"],
-  variable: "--font-sans",
-});
-
-const montserrat = Montserrat({
-  subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
-  variable: "--font-montserrat",
+  variable: "--font-sans",
 });
 
 export const metadata: Metadata = {
@@ -27,23 +21,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin=""
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap"
-          rel="stylesheet"
-        />
-      </head>
       <body
         className={cn(
           "min-h-screen bg-white font-sans antialiased",
           fontSans.variable,
-          montserrat.variable,
         )}
       >
         {children}
