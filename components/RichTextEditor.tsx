@@ -54,13 +54,8 @@ const RichTextEditor = ({
 }: RichTextEditorProps) => {
   const [showHeadingDropdown, setShowHeadingDropdown] = useState(false);
   const [currentHeadingLevel, setCurrentHeadingLevel] = useState<Level>(1);
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isFocused, setIsFocused] = useState(false);
-  const [uploadedImage, setUploadedImage] = useState<{
-    url: string;
-    name: string;
-  } | null>(null);
 
   const [uploadedImages, setUploadedImages] = useState<
     Array<{
@@ -736,7 +731,6 @@ const RichTextEditor = ({
                     key={index}
                     onClick={() => {
                       button.action();
-                      setShowMobileMenu(false);
                     }}
                     className={`p-2 rounded hover:bg-slate-100 ${
                       button.isActive ? "text-[#334155]" : "text-[#64748B]"

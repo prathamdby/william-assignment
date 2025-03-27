@@ -360,6 +360,23 @@ export default function ServiceDetailsPage({
   const [questionContent, setQuestionContent] = useState<string>("");
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  // Handle click outside to close dropdown
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsTimezoneDropdownOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   // Get service data
   const service = getServiceById(params.serviceId);
 
@@ -403,23 +420,6 @@ export default function ServiceDetailsPage({
       </div>
     );
   }
-
-  // Handle click outside to close dropdown
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setIsTimezoneDropdownOpen(false);
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
 
   const formatDate = (date: Date) => {
     const days = [
@@ -521,7 +521,7 @@ export default function ServiceDetailsPage({
                   {/* Assist you with section */}
                   <div className="mt-6 pb-6 border-b border-[#E2E8F0]">
                     <p className="text-sm text-[#64748B] font-medium">
-                      What you'll get
+                      What you&apos;ll get
                     </p>
                     <div className="mt-2 p-4 bg-[#EFF6FF] rounded">
                       <ul className="flex flex-col gap-2">
@@ -750,7 +750,7 @@ export default function ServiceDetailsPage({
                     </span>
                   </div>
                   <div className="grid grid-cols-2 gap-x-3 gap-y-3">
-                    {timeSlots.map((time, index) => {
+                    {timeSlots.map((time) => {
                       const isSelected = selectedTimeSlot === time;
                       const isFirst = time === "6:00 - 6:30PM";
                       return (

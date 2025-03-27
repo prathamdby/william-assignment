@@ -1,15 +1,6 @@
 "use client";
 
-import {
-  IndianRupee,
-  Clock,
-  Calendar,
-  MessageSquare,
-  Video,
-  Package as PackageIcon,
-  ShoppingBag,
-} from "lucide-react";
-import Image from "next/image";
+import { IndianRupee } from "lucide-react";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./ui/hover-card";
 import Link from "next/link";
 

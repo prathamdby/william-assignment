@@ -6,12 +6,10 @@ import Link from "next/link";
 import {
   ShieldCheckIcon,
   Share2,
-  X,
   Video,
   MessageSquare,
   Clock,
   Calendar,
-  IndianRupee,
   PackageIcon,
   Presentation,
   Linkedin,
@@ -19,7 +17,6 @@ import {
   Twitter,
   FileText,
   ArrowLeft,
-  AlertCircle,
 } from "lucide-react";
 import { ProfileTabs } from "@/components/ProfileTabs";
 import { ServiceCard } from "@/components/ServiceCard";

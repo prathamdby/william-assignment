@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef, useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Search,
   ChevronDown,
@@ -20,7 +19,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { FilterOption } from "./ActiveFilters";
-import { cn } from "@/lib/utils";
 
 // Role options for filter
 const roleOptions = [
@@ -121,25 +119,6 @@ export function MentorSearch({
   const [isCompanyOpen, setIsCompanyOpen] = useState(false);
   const [isSlotOpen, setIsSlotOpen] = useState(false);
   const [isRatingOpen, setIsRatingOpen] = useState(false);
-
-  // Track if we're on mobile
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    // Detect if we're on mobile
-    const checkIfMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    // Initial check
-    checkIfMobile();
-
-    // Add resize listener
-    window.addEventListener("resize", checkIfMobile);
-
-    // Cleanup
-    return () => window.removeEventListener("resize", checkIfMobile);
-  }, []);
 
   // Update internal filters when activeFilters changes from parent
   useEffect(() => {
